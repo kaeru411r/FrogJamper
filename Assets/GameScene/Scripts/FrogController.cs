@@ -18,37 +18,37 @@ public class FrogController : MonoBehaviour
     Rigidbody2D rb = default;
 
     //  ジャンプ関連
-    /// <summary>ジャンプ力のチャージ速度</summary>
+    [Tooltip("ジャンプ力のチャージ倍率")]
     [SerializeField] float m_accumulate = default;
-    /// <summary>ジャンプ時のスカラー量</summary>
+    [Tooltip("ジャンプ時のスカラー量")]
     [SerializeField] float m_speed = default;
-    /// <summary>滞空時間</summary>
+    [Tooltip("滞空時間")]
     float power = 0;
     /// <summary>チャージキャンセル</summary>
     bool cancel = false;
-    /// <summary>ジャンプ距離の円の表示レンダラー</summary>
+    [Tooltip("ジャンプ距離の円の表示レンダラー")]
     [SerializeField] LineRenderer m_lineRen = default;
-    /// <summary>円の太さ</summary>
+    [Tooltip("円の太さ")]
     [SerializeField] float m_cirWid = default;
-    /// <summary>円を構成する線の端の数</summary>
-    int segments = 380;
-    /// <summary>円の表示をするか否か</summary>
+    /// <summary>円を構成する線の数</summary>
+    int segments = 370;
+    [Tooltip("円の表示をするか否か")]
     [SerializeField] bool circle = true;
-    /// <summary>円の切り替えボタン</summary>
+    [Tooltip("円の切り替えボタン")]
     [SerializeField] Text circleButton = default;
     //
 
     //  旋回関係
-    /// <summary>向ける向きの限界</summary>
+    [Tooltip("向ける向きの限界")]
     [SerializeField] float m_agnleLimit;
-    /// <summary>旋回速度</summary>
+    [Tooltip("旋回速度")]
     [SerializeField] float m_angVelo;
     //
 
     //  Frogの見た目関連
-    /// <summary>Frogの見た目</summary>
+    [Tooltip("Frogの見た目")]
     [SerializeField] Sprite[] m_sprite;
-    /// <summary>水没状態の時間(秒数)</summary>
+    [Tooltip("水没状態の時間(秒数)")]
     [SerializeField] float m_splash;
     /// <summary>FrogのSpriteRenderer</summary>
     SpriteRenderer sr;
@@ -64,10 +64,18 @@ public class FrogController : MonoBehaviour
     FrogState state = new FrogState();
     //
 
-    /// <summary>ゲームマネージャー</summary>
+    [Tooltip("ライフ\n0になるとゲームオーバー")]
+    [SerializeField] int m_life = 0;
+    //  static版
+    static int life = 50;
+
+    [Tooltip("ゲームマネージャー")]
     [SerializeField] GameManager3 gm = default;
 
-    /// <summary>スコアボード</summary>
+    [Tooltip("フィールド管理")]
+    [SerializeField] FieldManager fieldManager = default;
+
+    [Tooltip("スコアボード")]
     [SerializeField] Score score = default;
 
 
@@ -77,14 +85,6 @@ public class FrogController : MonoBehaviour
     /// <summary>今フレームの推定fps</summary>
     float fps = 0;
 
-    /// <summary>前フレームのfps</summary>
-    float bFps = 0;
-
-    /// <summary>前々フレームのfps</summary>
-    float bBFps = 0;
-
-    /// <summary>前々々フレームのfps</summary>
-    float bBBFps = 0;
 
 
     // Start is called before the first frame update
@@ -102,44 +102,52 @@ public class FrogController : MonoBehaviour
         m_lineRen.positionCount = segments;
         //
 
+        //  lifeのリセット
+        if(life == 50)
+        {
+            life = m_life;
+        }
 
-        bBFps = 1 / Time.deltaTime;
-        bBBFps = 1 / Time.deltaTime;
+        //カエルの位置を調整
+        //transform.position = new Vector3(fieldManager.Position.x, fieldManager.FieldEreaUY + 1, -1f);
     }
 
     // Update is called once per frame
     void Update()
     {
+        fps = 1 / Time.deltaTime;
         // Sink();
         if (state == FrogState.InWater)
         {
             Sink();
         }
-        bFps = 1 / Time.deltaTime;     //  前フレームのfps
-        fps = (bFps + bBFps + bBBFps) / 3;
 
 
         //  プレイヤーが一定範囲を出たらゲームオーバー
-        if (transform.position.y < -8)
+        if (transform.position.y < fieldManager.FieldEreaUY - 1)
         {
-            gm.GameOver();
+            state = FrogState.Dead;
+            Death();
         }
-        if (transform.position.y > 9)
+        if (transform.position.y > fieldManager.FieldEreaTY + 1)
         {
-            gm.GameOver();
+            state = FrogState.Dead;
+            Death();
         }
-        if (transform.position.x < -5)
+        if (transform.position.x < fieldManager.FieldEreaLX - 1)
         {
-            gm.GameOver();
+            state = FrogState.Dead;
+            Death();
         }
-        if (transform.position.x > 5)
+        if (transform.position.x > fieldManager.FieldEreaRX + 1)
         {
-            gm.GameOver();
+            state = FrogState.Dead;
+            Death();
         }
         //
 
         //  蓮に乗っているときに行う処理
-        if (state == FrogState.Grounded && stop != true)
+        if (state == FrogState.Grounded && !stop)
         {
             //  方向操作
             if (Input.GetAxisRaw("Horizontal") < 0 && transform.rotation.z < m_agnleLimit)  //  m_angVeloの速さで左を向く
@@ -153,7 +161,7 @@ public class FrogController : MonoBehaviour
             //
 
             //  ジャンプ時間チャージ
-            if (Input.GetButton("Fire1") && cancel != true)
+            if (Input.GetButton("Fire1") && !cancel)
             {
                 power += m_accumulate * Time.deltaTime;
             }
@@ -165,17 +173,17 @@ public class FrogController : MonoBehaviour
                 for (int i = 0; i < segments; i++)
                 {
                     //  線の位置を設定
-                    var rad = Mathf.Deg2Rad * (i * 380f / segments);
+                    var rad = Mathf.Deg2Rad * i;
                     float x = (float)(transform.position.x + Mathf.Sin(rad) * m_speed * power);
                     float y = (float)(transform.position.y + Mathf.Cos(rad) * m_speed * power);
-                    points[i] = new Vector3(x, y, 0);
+                    points[i] = new Vector3(x, y, transform.position.y - 0.1f);
                     //
                 }
 
                 //  円描画用linerendererをon
                 m_lineRen.enabled = true;
 
-                //  円を表示    
+                //  円の位置を設定   
                 m_lineRen.SetPositions(points);
             }
 
@@ -206,26 +214,25 @@ public class FrogController : MonoBehaviour
                 m_lineRen.enabled = false;
             }
 
-            if(state == FrogState.MidAir)
+
+            if (state == FrogState.MidAir)
             {
-                power -= Time.deltaTime;
+                StartCoroutine(Jump());
             }
-            //
+
         }
         ///  蓮に乗っているときに行う処理
 
-        //  powerが0になるまでpowerを1づつ減らす
-        if (power > 0 && stop != true)
+        
+        //power秒間飛ぶ
+        //power秒間経つと処理が開始される。
+        IEnumerator Jump ()
         {
-            power -= Time.deltaTime;
-        }
-        //
-
-        //  powerが0になったフレームの処理
-        if (state == FrogState.MidAir && power <= 0)
-        {
+            yield return new WaitForSeconds(power); //  power秒間待つ
             //  速度を0にする
             rb.velocity = new Vector2(0, 0);
+
+            power = 0;
 
             //  着地か着水か
             if (contact) // 着地できる範囲に着地可能なオブジェクトがあったら接地判定をtrueにし、向きを正す
@@ -233,20 +240,14 @@ public class FrogController : MonoBehaviour
                 Debug.Log("着地着水");
                 sr.sprite = m_sprite[0];
                 state = FrogState.Grounded;
-                transform.up = new Vector3(0, 0, 0);
+                transform.up = new Vector2(0, 0);
             }
             else  //そうでなければ水没判定をtrueにする
             {
-                Sink();
+                StartCoroutine(Sink());
                 Debug.Log("水没true");
             }
-
         }
-
-
-
-        bBFps = bFps;
-        bBBFps = bBFps;
     }
 
 
@@ -254,26 +255,48 @@ public class FrogController : MonoBehaviour
     /// 水没時の処理
     /// 一定フレームの間水没時スプライトを適応
     /// </summary>
-    public void Sink()
+    IEnumerator Sink()
     {
-        if (state != FrogState.InWater)
+        Debug.Log("水没");
+        score.Stop(true);
+        sr.sprite = m_sprite[2];
+        state = FrogState.InWater;
+        transform.position = new Vector3(transform.position.x, transform.position.y, -1f);
+
+        yield return new WaitForSeconds(m_splash);
+
+        Debug.Log("ゲームオーバー");
+        state = FrogState.Dead;
+        Death();
+    }
+
+    /// <summary>
+    /// 外部からの水没処理
+    /// </summary>
+    public void SinkStart()
+    {
+        StartCoroutine(Sink());
+    }
+
+
+    /// <summary>
+    /// プレイヤーがいずれかの方法で死んだときに呼ぶ
+    /// lifeが1以上あればscoreを引き継いで再開、そうでなければゲームオーバー
+    /// </summary>
+    void Death()
+    {
+        if(life <= 0)
         {
-            Debug.Log("水没");
-            score.Stop(true);
-            sr.sprite = m_sprite[2];
-            state = FrogState.InWater;
-        }
-        else if (m_splash >= 0)
-        {
-            m_splash -= Time.deltaTime;
+            LifeReset();
+            gm.GameOver();
         }
         else
         {
-            Debug.Log("ゲームオーバー");
-            gm.GameOver();
+            Debug.Log(life);
+            life--;
+            gm.GameReplay();
         }
     }
-    //
 
     //  着地可否判定部分
     private void OnTriggerExit2D(Collider2D collision)
@@ -314,7 +337,7 @@ public class FrogController : MonoBehaviour
                 Debug.Log("同期");
                 //  位置と移動速度を乗っているオブジェクトと同期
                 rb.velocity = getOn.GetComponent<Rigidbody2D>().velocity;
-                transform.position = new Vector3(getOn.transform.position.x + 0.1f, getOn.transform.position.y, getOn.transform.position.z - 1);
+                transform.position = new Vector3(getOn.transform.position.x + 0.1f, getOn.transform.position.y , -1);
                 //
             }
         }
@@ -342,6 +365,23 @@ public class FrogController : MonoBehaviour
         }
     }
 
+    /// <summary>円の表示変更</summary>
+    public void Circle(bool tf)
+    {
+        if (tf)
+        {
+            circle = true;
+            circleButton.text = "Circle On";
+            m_lineRen.enabled = true;
+        }
+        else
+        {
+            circle = false;
+            circleButton.text = "Circle Off";
+            m_lineRen.enabled = false;
+        }
+    }
+
     /// <summary>円の表示切替</summary>
     public void Circle()
     {
@@ -357,6 +397,12 @@ public class FrogController : MonoBehaviour
             circleButton.text = "Circle On";
             m_lineRen.enabled = true;
         }
+    }
+
+    /// <summary>lifeを初期値に戻す</summary>
+    public void LifeReset()
+    {
+        life = 50;
     }
 }
 

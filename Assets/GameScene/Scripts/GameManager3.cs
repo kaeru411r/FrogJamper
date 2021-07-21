@@ -12,15 +12,14 @@ using System;
 public class GameManager3 : MonoBehaviour
 {
 
-
-    //  gameoverの参照先
+    [Tooltip("gameoverの参照先")]
     [SerializeField] GameObject frog = default;
-    /// <summary>プレイヤーコントロールクラス</summary>
+    [Tooltip("プレイヤーコントロールクラス")]
     [SerializeField] FrogController frogController = default;
     //
 
     //  メニュー関連
-    /// <summary>メニュー</summary>
+    [Tooltip("メニュー")]
     [SerializeField] GameObject menu = default;
     /// <summary>メニューを開いているか</summary>
     bool openMenu = false;
@@ -30,11 +29,14 @@ public class GameManager3 : MonoBehaviour
     /// <summary>ゲームオーバー判定</summary>
     bool gameover = false;
 
-    /// <summary>ゲームオーバー表示</summary>
+    [Tooltip("ゲームオーバー表示")]
     [SerializeField] GameObject gameOverText = default;
 
-    /// <summary>スコアボード</summary>
+    [Tooltip("スコアボード")]
     [SerializeField] Score score = default;
+
+    [Tooltip("スコアボード背景")]
+    [SerializeField] GameObject whiteBack = default;
 
 
     private void Start()
@@ -56,7 +58,7 @@ public class GameManager3 : MonoBehaviour
             Time.timeScale = 1;
             frogController.Stop();
         }
-        else if (Input.GetButtonDown("Cancel") && openMenu != true) //  メニュー開く
+        else if (Input.GetButtonDown("Cancel") && !openMenu) //  メニュー開く
         {
             menu.SetActive(true);
             openMenu = true;
@@ -68,7 +70,7 @@ public class GameManager3 : MonoBehaviour
         //  ゲームオーバー中の処理
         if (gameover)
         {
-            if (Input.anyKeyDown && Input.GetButton("Cancel") != true && openMenu != true)   //  メニューの操作を阻害しない範囲で何かしらを押してこのシーンをリセット
+            if (Input.anyKeyDown && Input.GetButton("Cancel") != true && !openMenu)   //  メニューの操作を阻害しない範囲で何かしらを押してこのシーンをリセット
             {
                 SceneManager.LoadScene("0_1 FrogJamper");
             }
@@ -76,6 +78,26 @@ public class GameManager3 : MonoBehaviour
 
 
     }
+
+    /// <summary>
+    ///     ゲームリプレイ時に呼ばれる
+    ///     スコアのカウントが停止
+    ///     スコア以外のゲーム中のオブジェクトを消す   
+    /// </summary>
+    public void GameReplay()
+    {
+        //  ゲームオーバー判定をtrueに
+        gameover = true;
+
+        //  スコア固定
+        score.Stop(true);
+
+        //  スコア記録
+        score.ScoreRecode();
+
+        SceneManager.LoadScene("0_1 FrogJamper");
+    }
+
     /// <summary>
     ///   ゲームオーバー時に呼ぶ
     ///   スコアのカウントが停止
@@ -91,6 +113,7 @@ public class GameManager3 : MonoBehaviour
 
         //  ゲームオーバー表示
         gameOverText.SetActive(true);
+        whiteBack.SetActive(true);
 
 
         //  不必要なオブジェクトを消去
@@ -104,14 +127,16 @@ public class GameManager3 : MonoBehaviour
         }
         Destroy(frog, 0);
         //
+
+        score.ScoreReset();
     }
 
     /// <summary>
     /// ゲームを終了
     /// </summary>
-    public void Quit()
+    public void Exit()
     {
-        Application.Quit();
+        SceneManager.LoadScene("Title");
     }
 
     /// <summary>
@@ -123,6 +148,21 @@ public class GameManager3 : MonoBehaviour
         openMenu = false;
         Time.timeScale = 1;
         frogController.Stop();
+    }
+
+    public void SetUp()
+    {
+        Time.timeScale = 1;
+        score.ScoreReset();
+        frogController.LifeReset();
+    }
+
+    [SerializeField] public struct Erea
+    {
+        public float RX { get; }
+        public float LX { get; }
+        public float RY { get; }
+        public float LY { get; }
     }
 }
 

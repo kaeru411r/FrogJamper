@@ -2,15 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// プレイヤーが最初に乗っている蓮の葉のコントロールをする
+/// </summary>
 public class StartPosition : MonoBehaviour
 {
-    //  初めの葉っぱに乗っていられる制限時間(秒)
+    [Tooltip("初めの葉っぱに乗っていられる制限時間(秒)")]
     [SerializeField] float m_time;
-    [SerializeField] FrogController frogC = default;
+
+    [Tooltip("FrogControllerコンポーネント")]
+    [SerializeField] FrogController m_frogController = default;
+
+    [Tooltip("FieldManagerコンポーネント")]
+    [SerializeField] FieldManager m_fieldManager = default;
 
     private void Start()
     {
-       StartCoroutine("Break");
+       StartCoroutine(Break());
+        transform.position = new Vector3(m_fieldManager.Position.x, m_fieldManager.FieldEreaUY + 1);
+        m_frogController.transform.position = new Vector3(transform.position.x, transform.position.y, -1 );
     }
     private void OnTriggerExit2D(Collider2D collision)  //プレイヤーが離れたら消去
     {
@@ -19,7 +30,7 @@ public class StartPosition : MonoBehaviour
             Destroy(gameObject, 0);
         }
     }
-    IEnumerator Break() //時限による葉っぱの破壊及びsinkをtrueに
+    IEnumerator Break() //時限による葉っぱの破壊及びsinkを呼び出し
     {
         yield return new WaitForSeconds(m_time);    //m_time経過後次の行へ
 
@@ -29,9 +40,8 @@ public class StartPosition : MonoBehaviour
         //var frog = GameObject.Find("Frog");
         //var frogC = frog.GetComponent<FrogController>();
         ////
-
-        frogC.Sink();
+        Debug.Log(" ");
+        m_frogController.SinkStart();
         Destroy(gameObject, 0); //このオブジェクトを消去
-        yield break;
     }
 }

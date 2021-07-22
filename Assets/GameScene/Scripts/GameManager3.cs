@@ -20,7 +20,7 @@ public class GameManager3 : MonoBehaviour
 
     //  メニュー関連
     [Tooltip("メニュー")]
-    [SerializeField] GameObject menu = default;
+    [SerializeField] List<GameObject> m_menus = default;
     /// <summary>メニューを開いているか</summary>
     bool openMenu = false;
     //
@@ -38,6 +38,11 @@ public class GameManager3 : MonoBehaviour
     [Tooltip("スコアボード背景")]
     [SerializeField] GameObject whiteBack = default;
 
+    [Tooltip("タイトルシーンの名前")]
+    [SerializeField] string m_titleSceanName = default;
+    /// <summary>このシーンの名前</summary>
+    string m_thisSceanName = default;
+
 
     private void Start()
     {
@@ -46,6 +51,8 @@ public class GameManager3 : MonoBehaviour
 
         //  フレームレートの固定
         Application.targetFrameRate = 60; //60FPSに設定
+
+        m_thisSceanName = SceneManager.GetActiveScene().name;
     }
 
     // Update is called once per frame
@@ -53,14 +60,20 @@ public class GameManager3 : MonoBehaviour
     {
         if (Input.GetButtonDown("Cancel") && openMenu)  //メニュー閉じる
         {
-            menu.SetActive(false);
+            foreach(var menu in m_menus)
+            {
+                menu.SetActive(false);
+            }
             openMenu = false;
             Time.timeScale = 1;
             frogController.Stop();
         }
         else if (Input.GetButtonDown("Cancel") && !openMenu) //  メニュー開く
         {
-            menu.SetActive(true);
+            foreach (var menu in m_menus)
+            {
+                menu.SetActive(true);
+            }
             openMenu = true;
             Time.timeScale = 0;
             frogController.Stop();
@@ -72,7 +85,7 @@ public class GameManager3 : MonoBehaviour
         {
             if (Input.anyKeyDown && Input.GetButton("Cancel") != true && !openMenu)   //  メニューの操作を阻害しない範囲で何かしらを押してこのシーンをリセット
             {
-                SceneManager.LoadScene("0_1 FrogJamper");
+                SceneManager.LoadScene(m_thisSceanName);
             }
         }
 
@@ -95,7 +108,7 @@ public class GameManager3 : MonoBehaviour
         //  スコア記録
         score.ScoreRecode();
 
-        SceneManager.LoadScene("0_1 FrogJamper");
+        SceneManager.LoadScene(m_thisSceanName);
     }
 
     /// <summary>
@@ -136,7 +149,7 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void Exit()
     {
-        SceneManager.LoadScene("Title");
+        SceneManager.LoadScene(m_titleSceanName);
     }
 
     /// <summary>
@@ -144,7 +157,10 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void CloseMenu()
     {
-        menu.SetActive(false);
+        foreach (var menu in m_menus)
+        {
+            menu.SetActive(false);
+        }
         openMenu = false;
         Time.timeScale = 1;
         frogController.Stop();

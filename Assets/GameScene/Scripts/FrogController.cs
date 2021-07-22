@@ -69,6 +69,8 @@ public class FrogController : MonoBehaviour
     //  static版
     static int life = 50;
 
+    public int LIfe { get { return m_life; } }
+
     [Tooltip("ゲームマネージャー")]
     [SerializeField] GameManager3 gm = default;
 

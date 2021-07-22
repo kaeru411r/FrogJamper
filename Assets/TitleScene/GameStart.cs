@@ -16,6 +16,9 @@ public class GameStart : MonoBehaviour
     bool m_openMenu = false;
     //
 
+    [Tooltip("ステージ１のインデックス")]
+    [SerializeField] string m_stage1Name = default;
+
     /// <summary>カエルの円の表示の有無</summary>
     bool m_circle = true;
     [Tooltip("円切り替えボタンのテキスト")]
@@ -28,19 +31,16 @@ public class GameStart : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
-    /// <summary>シーンをゲームシーンに移行する</summary>
-    public void NextScene()
-    {
-        Time.timeScale = 1;
-        SceneManager.LoadScene("0_1 FrogJamper");
-        GameManager3 gameManager = GameObject.Find("GameManager").GetComponent<GameManager3>();
-        FrogController frogController = GameObject.Find("Frog").GetComponent<FrogController>();
-        frogController.Circle(m_circle);
-        gameManager.SetUp();
-    }
-
     private void Update()
     {
+        if(SceneManager.GetActiveScene().name == m_stage1Name)
+        {
+            GameManager3 gameManager = GameObject.Find("GameManager").GetComponent<GameManager3>();
+            FrogController frogController = GameObject.Find("Frog").GetComponent<FrogController>();
+            frogController.Circle(m_circle);
+            gameManager.SetUp();
+            Destroy(gameObject, 0);
+        }
         if (Input.GetButtonDown("Cancel") && m_openMenu)  //メニュー閉じる
         {
             m_menu.SetActive(false);
@@ -51,6 +51,12 @@ public class GameStart : MonoBehaviour
             m_menu.SetActive(true);
             m_openMenu = true;
         }
+    }
+
+    /// <summary>シーンをゲームシーンに移行する</summary>
+    public void NextScene()
+    {
+        SceneManager.LoadScene(m_stage1Name);
     }
 
     /// <summary>ゲームを終了</summary>

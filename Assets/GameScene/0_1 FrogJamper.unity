@@ -495,15 +495,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e699cfe9637024bb385408912ba8b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frog: {fileID: 1809575969}
-  frogController: {fileID: 1809575970}
+  m_frog: {fileID: 1809575969}
+  m_frogController: {fileID: 1809575970}
   m_menus:
   - {fileID: 1116232548}
   - {fileID: 424978157}
   - {fileID: 1885314093}
-  gameOverText: {fileID: 187950984}
-  score: {fileID: 1063224203}
-  whiteBack: {fileID: 1754858924}
+  m_gameOverText: {fileID: 187950984}
+  m_score: {fileID: 1206031803}
+  m_whiteBack: {fileID: 1228708332}
   m_titleSceanName: Title
 --- !u!4 &236525345
 Transform:
@@ -2085,7 +2085,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6126b956099df2b42990721e45d8d74c, type: 3}
   - {fileID: 21300000, guid: 0080359347233274083f5ce33e7a4710, type: 3}
   m_splash: 0.5
-  m_life: 10
+  m_life: 13
   m_lifeUI: {fileID: 1303205587}
   gm: {fileID: 236525344}
   fieldManager: {fileID: 868658183}

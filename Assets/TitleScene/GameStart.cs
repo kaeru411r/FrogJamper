@@ -33,12 +33,11 @@ public class GameStart : MonoBehaviour
 
     private void Update()
     {
-        if(SceneManager.GetActiveScene().name == m_stage1Name)
+        if (SceneManager.GetActiveScene().name == m_stage1Name)
         {
             GameManager3 gameManager = GameObject.Find("GameManager").GetComponent<GameManager3>();
             FrogController frogController = GameObject.Find("Frog").GetComponent<FrogController>();
             frogController.Circle(m_circle);
-            gameManager.SetUp();
             Destroy(gameObject, 0);
         }
         if (Input.GetButtonDown("Cancel") && m_openMenu)  //メニュー閉じる

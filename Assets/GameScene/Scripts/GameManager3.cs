@@ -13,66 +13,89 @@ public class GameManager3 : MonoBehaviour
 {
 
     [Tooltip("gameoverの参照先")]
-    [SerializeField] GameObject frog = default;
+    [SerializeField] GameObject m_frog = default;
     [Tooltip("プレイヤーコントロールクラス")]
-    [SerializeField] FrogController frogController = default;
+    [SerializeField] FrogController m_frogController = default;
     //
 
     //  メニュー関連
     [Tooltip("メニュー")]
-    [SerializeField] GameObject menu = default;
+    [SerializeField] List<GameObject> m_menus = default;
     /// <summary>メニューを開いているか</summary>
-    bool openMenu = false;
+    bool m_openMenu = false;
     //
 
 
     /// <summary>ゲームオーバー判定</summary>
-    bool gameover = false;
+    bool m_gameover = false;
+
+    /// <summary>ゲーム進行状況</summary>
+    static bool m_gamePlay = false;
 
     [Tooltip("ゲームオーバー表示")]
-    [SerializeField] GameObject gameOverText = default;
+    [SerializeField] GameObject m_gameOverText = default;
 
     [Tooltip("スコアボード")]
-    [SerializeField] Score score = default;
+    [SerializeField] Score m_score = default;
 
     [Tooltip("スコアボード背景")]
-    [SerializeField] GameObject whiteBack = default;
+    [SerializeField] GameObject m_whiteBack = default;
+
+    [Tooltip("タイトルシーンの名前")]
+    [SerializeField] string m_titleSceanName = default;
+    /// <summary>このシーンの名前</summary>
+    string m_thisSceanName = default;
 
 
     private void Start()
     {
+
         //  乱数のseed値変更
         UnityEngine.Random.InitState(DateTime.Now.Second);
 
         //  フレームレートの固定
         Application.targetFrameRate = 60; //60FPSに設定
+
+        m_thisSceanName = SceneManager.GetActiveScene().name;
+
+        //ゲーム開始時の処理
+        if (!m_gamePlay)
+        {
+            SetUp();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Cancel") && openMenu)  //メニュー閉じる
+        if (Input.GetButtonDown("Cancel") && m_openMenu)  //メニュー閉じる
         {
-            menu.SetActive(false);
-            openMenu = false;
+            foreach (var menu in m_menus)
+            {
+                menu.SetActive(false);
+            }
+            m_openMenu = false;
             Time.timeScale = 1;
-            frogController.Stop();
+            m_frogController.Stop();
         }
-        else if (Input.GetButtonDown("Cancel") && !openMenu) //  メニュー開く
+        else if (Input.GetButtonDown("Cancel") && !m_openMenu) //  メニュー開く
         {
-            menu.SetActive(true);
-            openMenu = true;
+            foreach (var menu in m_menus)
+            {
+                menu.SetActive(true);
+            }
+            m_openMenu = true;
             Time.timeScale = 0;
-            frogController.Stop();
+            m_frogController.Stop();
         }
 
 
         //  ゲームオーバー中の処理
-        if (gameover)
+        if (m_gameover)
         {
-            if (Input.anyKeyDown && Input.GetButton("Cancel") != true && !openMenu)   //  メニューの操作を阻害しない範囲で何かしらを押してこのシーンをリセット
+            if (Input.anyKeyDown && Input.GetButton("Cancel") != true && !m_openMenu)   //  メニューの操作を阻害しない範囲で何かしらを押してこのシーンをリセット
             {
-                SceneManager.LoadScene("0_1 FrogJamper");
+                SceneManager.LoadScene(m_thisSceanName);
             }
         }
 
@@ -87,15 +110,15 @@ public class GameManager3 : MonoBehaviour
     public void GameReplay()
     {
         //  ゲームオーバー判定をtrueに
-        gameover = true;
+        m_gameover = true;
 
         //  スコア固定
-        score.Stop(true);
+        m_score.Stop(true);
 
         //  スコア記録
-        score.ScoreRecode();
+        m_score.ScoreRecode();
 
-        SceneManager.LoadScene("0_1 FrogJamper");
+        SceneManager.LoadScene(m_thisSceanName);
     }
 
     /// <summary>
@@ -106,14 +129,17 @@ public class GameManager3 : MonoBehaviour
     public void GameOver()
     {
         //  ゲームオーバー判定をtrueに
-        gameover = true;
+        m_gameover = true;
+
+        //  ゲームプレイを停止扱いに
+        m_gamePlay = true;
 
         //  スコア固定
-        score.Stop(true);
+        m_score.Stop(true);
 
         //  ゲームオーバー表示
-        gameOverText.SetActive(true);
-        whiteBack.SetActive(true);
+        m_gameOverText.SetActive(true);
+        m_whiteBack.SetActive(true);
 
 
         //  不必要なオブジェクトを消去
@@ -125,10 +151,10 @@ public class GameManager3 : MonoBehaviour
         {
             Destroy(go, 0);
         }
-        Destroy(frog, 0);
+        Destroy(m_frog, 0);
         //
 
-        score.ScoreReset();
+        m_score.ScoreReset();
     }
 
     /// <summary>
@@ -136,7 +162,7 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void Exit()
     {
-        SceneManager.LoadScene("Title");
+        SceneManager.LoadScene(m_titleSceanName);
     }
 
     /// <summary>
@@ -144,25 +170,21 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void CloseMenu()
     {
-        menu.SetActive(false);
-        openMenu = false;
+        foreach (var menu in m_menus)
+        {
+            menu.SetActive(false);
+        }
+        m_openMenu = false;
         Time.timeScale = 1;
-        frogController.Stop();
+        m_frogController.Stop();
     }
 
     public void SetUp()
     {
+        m_gamePlay = true;
         Time.timeScale = 1;
-        score.ScoreReset();
-        frogController.LifeReset();
-    }
-
-    [SerializeField] public struct Erea
-    {
-        public float RX { get; }
-        public float LX { get; }
-        public float RY { get; }
-        public float LY { get; }
+        m_score.ScoreReset();
+        m_frogController.LifeReset();
     }
 }
 

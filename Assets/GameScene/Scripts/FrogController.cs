@@ -68,6 +68,11 @@ public class FrogController : MonoBehaviour
     [SerializeField] int m_life = 0;
     //  static版
     static int life = 50;
+    [Tooltip("LifeUIコンポーネント")]
+    [SerializeField] LifeUI m_lifeUI = default;
+
+    public int LIfe { get { return life; } }
+
 
     [Tooltip("ゲームマネージャー")]
     [SerializeField] GameManager3 gm = default;
@@ -102,11 +107,6 @@ public class FrogController : MonoBehaviour
         m_lineRen.positionCount = segments;
         //
 
-        //  lifeのリセット
-        if(life == 50)
-        {
-            life = m_life;
-        }
 
         //カエルの位置を調整
         //transform.position = new Vector3(fieldManager.Position.x, fieldManager.FieldEreaUY + 1, -1f);
@@ -223,10 +223,10 @@ public class FrogController : MonoBehaviour
         }
         ///  蓮に乗っているときに行う処理
 
-        
+
         //power秒間飛ぶ
         //power秒間経つと処理が開始される。
-        IEnumerator Jump ()
+        IEnumerator Jump()
         {
             yield return new WaitForSeconds(power); //  power秒間待つ
             //  速度を0にする
@@ -285,7 +285,7 @@ public class FrogController : MonoBehaviour
     /// </summary>
     void Death()
     {
-        if(life <= 0)
+        if (life <= 0)
         {
             LifeReset();
             gm.GameOver();
@@ -293,7 +293,7 @@ public class FrogController : MonoBehaviour
         else
         {
             Debug.Log(life);
-            life--;
+            LifeReduce();
             gm.GameReplay();
         }
     }
@@ -337,7 +337,7 @@ public class FrogController : MonoBehaviour
                 Debug.Log("同期");
                 //  位置と移動速度を乗っているオブジェクトと同期
                 rb.velocity = getOn.GetComponent<Rigidbody2D>().velocity;
-                transform.position = new Vector3(getOn.transform.position.x + 0.1f, getOn.transform.position.y , -1);
+                transform.position = new Vector3(getOn.transform.position.x + 0.1f, getOn.transform.position.y, -1);
                 //
             }
         }
@@ -355,7 +355,7 @@ public class FrogController : MonoBehaviour
 
     public void Stop(bool tf)
     {
-        if(tf)
+        if (tf)
         {
             stop = true;
         }
@@ -402,7 +402,13 @@ public class FrogController : MonoBehaviour
     /// <summary>lifeを初期値に戻す</summary>
     public void LifeReset()
     {
-        life = 50;
+        life = m_life;
+    }
+
+    void LifeReduce()
+    {
+        life--;
+        m_lifeUI.LifeUpdate();
     }
 }
 

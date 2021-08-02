@@ -15,7 +15,7 @@ using System;
 public class FrogController : MonoBehaviour
 {
     //  FrogのRigidbody
-    Rigidbody2D rb = default;
+    Rigidbody2D m_rb = default;
 
     //  ジャンプ関連
     [Tooltip("ジャンプ力のチャージ倍率")]
@@ -51,7 +51,7 @@ public class FrogController : MonoBehaviour
     [Tooltip("水没状態の時間(秒数)")]
     [SerializeField] float m_splash;
     /// <summary>FrogのSpriteRenderer</summary>
-    SpriteRenderer sr;
+    SpriteRenderer m_sr;
     //
 
 
@@ -95,8 +95,8 @@ public class FrogController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();       //  速度変更用
-        sr = GetComponent<SpriteRenderer>();    //  外見変更用
+        m_rb = GetComponent<Rigidbody2D>();       //  速度変更用
+        m_sr = GetComponent<SpriteRenderer>();    //  外見変更用
 
 
         //
@@ -107,9 +107,6 @@ public class FrogController : MonoBehaviour
         m_lineRen.positionCount = segments;
         //
 
-
-        //カエルの位置を調整
-        //transform.position = new Vector3(fieldManager.Position.x, fieldManager.FieldEreaUY + 1, -1f);
     }
 
     // Update is called once per frame
@@ -149,42 +146,16 @@ public class FrogController : MonoBehaviour
         //  蓮に乗っているときに行う処理
         if (state == FrogState.Grounded && !stop)
         {
-            //  方向操作
-            if (Input.GetAxisRaw("Horizontal") < 0 && transform.rotation.z < m_agnleLimit)  //  m_angVeloの速さで左を向く
+            float bearing = Input.GetAxisRaw("Horizontal");
+            if (bearing != 0)
             {
-                transform.Rotate(new Vector3(0, 0, m_angVelo / fps));
+                Gyration(bearing);
             }
-            if (Input.GetAxisRaw("Horizontal") > 0 && transform.rotation.z > -m_agnleLimit)  //  m_angVeloの速さで右を向く
-            {
-                transform.Rotate(new Vector3(0, 0, -m_angVelo / fps));
-            }
-            //
 
             //  ジャンプ時間チャージ
             if (Input.GetButton("Fire1") && !cancel)
             {
-                power += m_accumulate * Time.deltaTime;
-            }
-
-            //  円描画部分
-            if (circle)
-            {
-                var points = new Vector3[segments];
-                for (int i = 0; i < segments; i++)
-                {
-                    //  線の位置を設定
-                    var rad = Mathf.Deg2Rad * i;
-                    float x = (float)(transform.position.x + Mathf.Sin(rad) * m_speed * power);
-                    float y = (float)(transform.position.y + Mathf.Cos(rad) * m_speed * power);
-                    points[i] = new Vector3(x, y, transform.position.y - 0.1f);
-                    //
-                }
-
-                //  円描画用linerendererをon
-                m_lineRen.enabled = true;
-
-                //  円の位置を設定   
-                m_lineRen.SetPositions(points);
+                Accumulate();
             }
 
             //  チャージキャンセル
@@ -206,18 +177,13 @@ public class FrogController : MonoBehaviour
             //  ジャンプ
             if (Input.GetButton("Fire1") != true && power > 0 && state == FrogState.Grounded)
             {
-                sr.sprite = m_sprite[1];
-                state = FrogState.MidAir;
-                rb.velocity = transform.up * m_speed;
-
-                //  円を消す
-                m_lineRen.enabled = false;
+                Jump();
             }
 
 
             if (state == FrogState.MidAir)
             {
-                StartCoroutine(Jump());
+                StartCoroutine(AirTime());
             }
 
         }
@@ -226,11 +192,11 @@ public class FrogController : MonoBehaviour
 
         //power秒間飛ぶ
         //power秒間経つと処理が開始される。
-        IEnumerator Jump()
+        IEnumerator AirTime()
         {
             yield return new WaitForSeconds(power); //  power秒間待つ
             //  速度を0にする
-            rb.velocity = new Vector2(0, 0);
+            m_rb.velocity = new Vector2(0, 0);
 
             power = 0;
 
@@ -238,7 +204,7 @@ public class FrogController : MonoBehaviour
             if (contact) // 着地できる範囲に着地可能なオブジェクトがあったら接地判定をtrueにし、向きを正す
             {
                 Debug.Log("着地着水");
-                sr.sprite = m_sprite[0];
+                m_sr.sprite = m_sprite[0];
                 state = FrogState.Grounded;
                 transform.up = new Vector2(0, 0);
             }
@@ -247,6 +213,56 @@ public class FrogController : MonoBehaviour
                 StartCoroutine(Sink());
                 Debug.Log("水没true");
             }
+        }
+
+        void Jump()
+        {
+            m_sr.sprite = m_sprite[1];
+            state = FrogState.MidAir;
+            m_rb.velocity = transform.up * m_speed;
+
+            //  円を消す
+            m_lineRen.enabled = false;
+        }
+    }
+
+    //  旋回
+    void Gyration(float bearing)
+    {
+        if (bearing < 0 && transform.rotation.z < m_agnleLimit)  //  m_angVeloの速さで左を向く
+        {
+            transform.Rotate(new Vector3(0, 0, m_angVelo / fps));
+        }
+        if (bearing > 0 && transform.rotation.z > -m_agnleLimit)  //  m_angVeloの速さで右を向く
+        {
+            transform.Rotate(new Vector3(0, 0, -m_angVelo / fps));
+        }
+    }
+
+    //  ジャンプ時間チャージ
+    void Accumulate()
+    {
+        power += m_accumulate * Time.deltaTime;
+
+        //  円描画部分
+        if (circle)
+        {
+            var points = new Vector3[segments];
+            for (int i = 0; i < segments; i++)
+            {
+                //  線の位置を設定
+                var rad = Mathf.Deg2Rad * i;
+                float x = (float)(transform.position.x + Mathf.Sin(rad) * m_speed * power);
+                float y = (float)(transform.position.y + Mathf.Cos(rad) * m_speed * power);
+                points[i] = new Vector3(x, y, transform.position.y - 0.1f);
+                //
+            }
+
+            //  円描画用linerendererをon
+            m_lineRen.enabled = true;
+
+            //  円の位置を設定   
+            m_lineRen.SetPositions(points);
         }
     }
 
@@ -259,7 +275,7 @@ public class FrogController : MonoBehaviour
     {
         Debug.Log("水没");
         score.Stop(true);
-        sr.sprite = m_sprite[2];
+        m_sr.sprite = m_sprite[2];
         state = FrogState.InWater;
         transform.position = new Vector3(transform.position.x, transform.position.y, -1f);
 
@@ -336,7 +352,7 @@ public class FrogController : MonoBehaviour
             {
                 Debug.Log("同期");
                 //  位置と移動速度を乗っているオブジェクトと同期
-                rb.velocity = getOn.GetComponent<Rigidbody2D>().velocity;
+                m_rb.velocity = getOn.GetComponent<Rigidbody2D>().velocity;
                 transform.position = new Vector3(getOn.transform.position.x + 0.1f, getOn.transform.position.y, -1);
                 //
             }

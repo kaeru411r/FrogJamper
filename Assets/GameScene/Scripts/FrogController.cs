@@ -64,10 +64,12 @@ public class FrogController : MonoBehaviour
     FrogState state = new FrogState();
     //
 
-    [Tooltip("ライフ\n0になるとゲームオーバー")]
-    [SerializeField] int m_life = 0;
+    [Tooltip("ゲーム開始時のlife")]
+    [SerializeField] int m_startLife = 0;
     //  static版
     static int life = 50;
+    [Tooltip("lifeの最大値")]
+    [SerializeField] int m_maxLife = default;
     [Tooltip("LifeUIコンポーネント")]
     [SerializeField] LifeUI m_lifeUI = default;
 
@@ -113,12 +115,6 @@ public class FrogController : MonoBehaviour
     void Update()
     {
         fps = 1 / Time.deltaTime;
-        // Sink();
-        if (state == FrogState.InWater)
-        {
-            Sink();
-        }
-
 
         //  プレイヤーが一定範囲を出たらゲームオーバー
         if (transform.position.y < fieldManager.FieldEreaUY - 1)
@@ -324,14 +320,6 @@ public class FrogController : MonoBehaviour
             contact = false;
         }
         //
-
-        //  乗っているものが消えたら水没
-        if (state == FrogState.Grounded && collision.gameObject == getOn)
-        {
-            Debug.Log("水没");
-            state = FrogState.InWater;
-        }
-        //
     }
     private void OnTriggerStay2D(Collider2D collision) //  接地も水没もしておらず、接触しているオブジェクトが蓮だった時着地可
     {
@@ -418,12 +406,18 @@ public class FrogController : MonoBehaviour
     /// <summary>lifeを初期値に戻す</summary>
     public void LifeReset()
     {
-        life = m_life;
+        life = m_startLife;
     }
 
     void LifeReduce()
     {
         life--;
+        m_lifeUI.LifeUpdate();
+    }
+
+    public void AddLife()
+    {
+        life++;
         m_lifeUI.LifeUpdate();
     }
 }

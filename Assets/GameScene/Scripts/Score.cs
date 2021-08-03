@@ -9,54 +9,69 @@ using UnityEngine.UI;
 /// </summary>
 public class Score : MonoBehaviour
 {
-    [Tooltip("テキスト本体")]
-    [SerializeField] Text text = default;
+    /// <summary>テキスト本体</summary>
+    Text m_text = default;
 
-    //  スコアを記録
-    static int score = 0;
+    /// <summary>スコアを記録</summary>
+    static int m_score = 0;
 
-    //  各プレイのスコアを記録
-    static List<int> scores = new List<int>();
+    /// <summary>各プレイのスコアを記録</summary>
+    static List<int> m_scores = new List<int>();
 
-    //  timeの端数を記録
-    float fTime = 0;
+    /// <summary>timeの端数を記録</summary>
+    float m_fractionTime = 0;
 
-    //  現在ゲームが止まっているか
-    bool stop = false;
+    /// <summary>現在ゲームが止まっているか</summary>
+    bool m_stop = false;
 
+    [Tooltip("BonusScoreで足されるスコア")]
+    [SerializeField] int m_bonusScore = default;
 
+    /// <summary>ボーナススコア表示に使用する文末の文字列</summary>
+    string m_bonusText = " ";
+    /// <summary>ボーナススコア表示に使用する文末の文字列の数値</summary>
+    int m_bonusTextValue = 0;
 
+    [Tooltip("ボーナススコアの表示時間")]
+    [SerializeField] float m_bonusDisplayTime = default;
+    /// <summary>ボーナススコア表示中か否か</summary>
+    int m_bonusDisplayNumber = 0;
+
+    private void Start()
+    {
+        m_text = this.GetComponent<Text>();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (!stop)
+        if (!m_stop)
         {
             //  スコア計算部分
-            fTime += Time.deltaTime;            //1フレームの時間fTimeを取得
-            int iTime = (int)(fTime * 100);     //iTimeにfTimeを100倍した整数部分を代入
-            fTime -= iTime / 100f;              //iTimeに代入した分をfTimeから引く
-            score += iTime;                     //iTimeをscoreに加算
+            m_fractionTime += Time.deltaTime;            //1フレームの時間fTimeを取得
+            int iTime = (int)(m_fractionTime * 100);     //iTimeにfTimeを100倍した整数部分を代入
+            m_fractionTime -= iTime / 100f;              //iTimeに代入した分をfTimeから引く
+            m_score += iTime;                            //iTimeをscoreに加算
             //
-
-            text.text = "score " + score;    //scoreを表示
+            string text = "score " + m_score + m_bonusText;
+            m_text.text = text;    //scoreを表示
         }
     }
 
     public void Stop()
     {
-        stop = !stop;
+        m_stop = !m_stop;
     }
 
     public void Stop(bool tf)
     {
         if (tf)
         {
-            stop = true;
+            m_stop = true;
         }
         else
         {
-            stop = false;
+            m_stop = false;
         }
     }
 
@@ -66,8 +81,8 @@ public class Score : MonoBehaviour
     /// </summary>
     public void ScoreReset()
     {
-        score = 0;
-        scores.Clear();
+        m_score = 0;
+        m_scores.Clear();
     }
 
     /// <summary>
@@ -76,15 +91,53 @@ public class Score : MonoBehaviour
     public void ScoreRecode()
     {
         int lastScore = 0;
-        foreach (var buf in scores)
+        foreach (var buf in m_scores)
         {
             lastScore += buf;
         }
-        scores.Add(score - lastScore);
-        Debug.Log(score);
-        foreach (var buf in scores)
+        m_scores.Add(m_score - lastScore);
+        Debug.Log(m_score);
+        foreach (var buf in m_scores)
         {
             Debug.Log(buf);
+        }
+    }
+
+    /// <summary>
+    /// スコアボーナスを獲得する
+    /// </summary>
+    public void AddScore()
+    {
+        m_score += m_bonusScore;
+        StartCoroutine(BonusDisplay());
+    }
+
+    /// <summary>
+    /// スコアボーナスを表示
+    /// </summary>
+    IEnumerator BonusDisplay()
+    {
+        if(m_bonusTextValue != 0)
+        {
+            Debug.LogWarning("0" + n);
+            m_bonusTextValue += m_bonusScore;
+            yield break;
+        }
+        else
+        {
+            Debug.LogWarning("2" + n);
+            m_bonusTextValue += m_bonusScore;
+            yield return null;
+        }
+        m_bonusText = "  +" + m_bonusTextValue;
+        m_bonusTextValue = 0;
+        Debug.LogWarning("1" + n);
+        m_bonusDisplayNumber++;
+        yield return new WaitForSeconds(m_bonusDisplayTime);
+        m_bonusDisplayNumber--;
+        if (m_bonusDisplayNumber <= 0)
+        {
+            m_bonusText = " ";
         }
     }
 }

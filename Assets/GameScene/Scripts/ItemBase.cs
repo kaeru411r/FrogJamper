@@ -42,4 +42,9 @@ public class ItemBase : MonoBehaviour
     {
         Debug.LogError("処理を上書きしてください");
     }
+
+    public void Destroy()
+    {
+        Destroy(gameObject, 0);
+    }
 }

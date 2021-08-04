@@ -34,7 +34,7 @@ public class Score : MonoBehaviour
 
     [Tooltip("ボーナススコアの表示時間")]
     [SerializeField] float m_bonusDisplayTime = default;
-    /// <summary>ボーナススコア表示中か否か</summary>
+    /// <summary>動作中のボーナススコア表示関数の数</summary>
     int m_bonusDisplayNumber = 0;
 
     private void Start()
@@ -114,28 +114,32 @@ public class Score : MonoBehaviour
 
     /// <summary>
     /// スコアボーナスを表示
+    /// 一フレームに呼ばれた回数分だけボーナスの表示数値が倍増していく
     /// </summary>
     IEnumerator BonusDisplay()
     {
         if(m_bonusTextValue != 0)
         {
-            Debug.LogWarning("0" + n);
             m_bonusTextValue += m_bonusScore;
-            yield break;
+            yield break;                        //  2回目以降は処理をここで終了する
         }
         else
         {
-            Debug.LogWarning("2" + n);
             m_bonusTextValue += m_bonusScore;
-            yield return null;
+            yield return null;                  //  1回目のみ次のフレームに処理を持ち越す
         }
+        //  ここまで1フレーム目
+
         m_bonusText = "  +" + m_bonusTextValue;
         m_bonusTextValue = 0;
-        Debug.LogWarning("1" + n);
         m_bonusDisplayNumber++;
+        //  ここまで2フレーム目
+
         yield return new WaitForSeconds(m_bonusDisplayTime);
+
+        //  ここから指定秒数経過後
         m_bonusDisplayNumber--;
-        if (m_bonusDisplayNumber <= 0)
+        if (m_bonusDisplayNumber <= 0)          //  もしこのインスタンス以降にインスタンス化されたこの関数が無ければ表示を消す
         {
             m_bonusText = " ";
         }

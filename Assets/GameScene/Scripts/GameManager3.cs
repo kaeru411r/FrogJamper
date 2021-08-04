@@ -16,6 +16,8 @@ public class GameManager3 : MonoBehaviour
     [SerializeField] GameObject m_frog = default;
     [Tooltip("プレイヤーコントロールクラス")]
     [SerializeField] FrogController m_frogController = default;
+    [Tooltip("Generatorコンポーネント")]
+    [SerializeField] Generator m_generator = default; 
     //
 
     //  メニュー関連
@@ -45,6 +47,14 @@ public class GameManager3 : MonoBehaviour
     [SerializeField] string m_titleSceanName = default;
     /// <summary>このシーンの名前</summary>
     string m_thisSceanName = default;
+
+
+    //  蓮の初期生成数
+    [Tooltip("蓮の初期生成数上限")]
+    [SerializeField] int m_upperLimit;
+    [Tooltip("蓮の初期生成数下限")]
+    [SerializeField] int m_lowerLimit;
+    //
 
 
     private void Start()
@@ -185,6 +195,7 @@ public class GameManager3 : MonoBehaviour
         Time.timeScale = 1;
         m_score.ScoreReset();
         m_frogController.LifeReset();
+        m_generator.SetUp();
     }
 }
 

@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+/// <summary>
+/// life回復アイテムコンポーネント
+/// </summary>
 
 public class AddLife : ItemBase
 {
-    [Tooltip("FrogControllerコンポーネント")]
-    [SerializeField] FrogController m_frogController = default;
     public override void Use()
     {
-        m_frogController.AddLife();
+        GameObject.Find("Frog").GetComponent<FrogController>().AddLife();   //  プレイヤーのAddLife関数を呼ぶ
         Destroy();
     }
 }

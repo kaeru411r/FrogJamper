@@ -22,6 +22,10 @@ public class LifeUI : MonoBehaviour
     [Tooltip("各ライフのマテリアル")]
     [SerializeField] Material[] m_material = default;
 
+    /// <summary>life表示用オブジェクトの数</summary>
+    int m_range = 0;
+
+
     private void Start()
     {
 
@@ -29,6 +33,8 @@ public class LifeUI : MonoBehaviour
         {
             m_images.Add(m_lifes[i].GetComponent<Image>());
         }
+
+        m_range = m_lifes.Count;
 
         LifeUpdate();
     }
@@ -39,13 +45,11 @@ public class LifeUI : MonoBehaviour
         //  lifeの値
         int life = m_frogController.LIfe;
         int index = 0;
-        //  life表示用オブジェクトの数
-        int range = m_lifes.Count;
 
         //  indexが万が一にもはみ出さないように想定より大きな数値のときは余剰分を切る
-        if(life > m_material.Length * range)
+        if(life > m_material.Length - 1 * m_range)
         {
-            life = m_material.Length * range;
+            life = m_material.Length - 1 * m_range;
         }
         //  lifeが0未満なら0に
         else if(life < 0)
@@ -54,20 +58,22 @@ public class LifeUI : MonoBehaviour
         }
 
         //  lifeに使用する色を決定
-        for (int i = 0; i <= life / range; i++)
+        for (int i = 0; i <= life / m_range; i++)
         {
             index++;
         }
 
         //  lifeの左側(大きい方)を変更
-        for (int i = 0; i < life % range; i++)
+        for (int i = 0; i < life % m_range; i++)
         {
+            if(index >=4)
+            Debug.LogError(life + "" + m_range);
             m_images[i].material = m_material[index];
         }
         //  lifeの右側(小さい方)を変更
-        for (int i = 0; i <= (range - 1) - life % range; i++)
+        for (int i = 0; i <= (m_range - 1) - life % m_range; i++)
         {
-            m_images[(range-1) - i].material = m_material[index - 1];
+            m_images[(m_range-1) - i].material = m_material[index - 1];
         }
     }
 }

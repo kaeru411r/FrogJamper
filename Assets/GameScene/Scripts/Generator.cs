@@ -46,6 +46,10 @@ public class Generator : MonoBehaviour
     [Tooltip("抽選間隔")]
     [SerializeField] float m_lotteryInterval = default;
 
+    [SerializeField] Type m_type = default;
+
+    [SerializeField] bool m_start = default;
+
 
     private void Start()
     {
@@ -54,6 +58,11 @@ public class Generator : MonoBehaviour
         m_ereaTY = m_fieldManager.FieldEreaTY - 1;
         m_ereaUY = m_fieldManager.FieldEreaUY + 1;
         m_centerY = m_fieldManager.Position.y;
+
+        if (m_start)
+        {
+            SetUp();
+        }
 
     }
     // Update is called once per frame
@@ -76,7 +85,14 @@ public class Generator : MonoBehaviour
     {
         if (Random.Range(0f, 100) < m_Probability)   //1フレーム毎にm_probability%の確率でm_genObをm_erea内に生成
         {
-            TopGenerate();
+            if (m_type == Type.Lotus)
+            {
+                TopGenerate();
+            }
+            else if (m_type == Type.Item)
+            {
+                PieGenerate();
+            }
             m_notGenerated = 0; //生成したらrelifをリセット
         }
         else
@@ -85,7 +101,14 @@ public class Generator : MonoBehaviour
         }
         if (m_notGenerated >= m_minimumTime)    //relifがm_timeを超えたらm_genObを生成し、relifをリセット
         {
-            TopGenerate();
+            if (m_type == Type.Lotus)
+            {
+                TopGenerate();
+            }
+            else if(m_type == Type.Item)
+            {
+                PieGenerate();
+            }
             m_notGenerated = 0;
         }
     }
@@ -120,5 +143,11 @@ public class Generator : MonoBehaviour
     void PieGenerate()
     {
         Instantiate(m_genOb, new Vector3(Random.Range(m_ereaRX, m_ereaLX), Random.Range(m_ereaTY, m_ereaUY)), Quaternion.Euler(0, 0, 0));
+    }
+
+    public enum Type
+    {
+        Lotus,
+        Item,
     }
 }

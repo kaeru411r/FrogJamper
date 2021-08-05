@@ -1,6 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+/// <summary>
+/// 諸アイテムの基幹関数
+/// </summary>
+
+
 [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
 
 public class ItemBase : MonoBehaviour

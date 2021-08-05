@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+/// <summary>
+/// スコアボーナス獲得アイテムコンポーネント
+/// </summary>
 
 public class BonusScore : ItemBase
 {
-    [Tooltip("Scoreコンポーネント")]
-    [SerializeField] Score m_score = default;
 
     [Tooltip("ボーナスの倍率")]
     [SerializeField] float m_factor = default;
@@ -13,9 +14,10 @@ public class BonusScore : ItemBase
 
     public override void Use()
     {
+        Score score = GameObject.Find("ScoreBord").GetComponent<Score>();
         for (int i = 0; i < m_factor; i++)
         {
-            m_score.AddScore();
+            score.AddScore();
         }
     }
 }

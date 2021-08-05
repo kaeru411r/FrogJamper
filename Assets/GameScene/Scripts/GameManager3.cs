@@ -195,7 +195,7 @@ public class GameManager3 : MonoBehaviour
         Time.timeScale = 1;
         m_score.ScoreReset();
         m_frogController.LifeReset();
-        m_generator.SetUp();
+        //m_generator.SetUp();
     }
 }
 

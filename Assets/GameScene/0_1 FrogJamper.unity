@@ -304,6 +304,9 @@ MonoBehaviour:
   m_lowerLimit: 4
   m_Probability: 25
   m_minimumTime: 5
+  m_lotteryInterval: 0.5
+  m_type: 0
+  m_start: 1
 --- !u!4 &71928459
 Transform:
   m_ObjectHideFlags: 0
@@ -353,7 +356,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_speedUpperLimit: 0
   m_speedLowerLimit: 0
-  m_score: {fileID: 1206031803}
   m_factor: 2
 --- !u!114 &102578457
 MonoBehaviour:
@@ -369,7 +371,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_speedUpperLimit: 0
   m_speedLowerLimit: 0
-  m_frogController: {fileID: 1809575970}
 --- !u!50 &102578458
 Rigidbody2D:
   serializedVersion: 4
@@ -650,6 +651,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_frog: {fileID: 1809575969}
   m_frogController: {fileID: 1809575970}
+  m_generator: {fileID: 0}
   m_menus:
   - {fileID: 1116232548}
   - {fileID: 424978157}
@@ -658,6 +660,8 @@ MonoBehaviour:
   m_score: {fileID: 1206031803}
   m_whiteBack: {fileID: 1228708332}
   m_titleSceanName: Title
+  m_upperLimit: 0
+  m_lowerLimit: 0
 --- !u!4 &236525345
 Transform:
   m_ObjectHideFlags: 0
@@ -785,7 +789,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_speedUpperLimit: 0
   m_speedLowerLimit: 0
-  m_frogController: {fileID: 1809575970}
 --- !u!50 &315244746
 Rigidbody2D:
   serializedVersion: 4
@@ -901,7 +904,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_speedUpperLimit: 0
   m_speedLowerLimit: 0
-  m_score: {fileID: 1206031803}
   m_factor: 2
 --- !u!1 &424978157
 GameObject:
@@ -2348,7 +2350,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6126b956099df2b42990721e45d8d74c, type: 3}
   - {fileID: 21300000, guid: 0080359347233274083f5ce33e7a4710, type: 3}
   m_splash: 0.5
-  m_startLife: 5
+  m_startLife: 15
   m_maxLife: 15
   m_lifeUI: {fileID: 1303205587}
   gm: {fileID: 236525344}
@@ -2721,4 +2723,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1976223215
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1976223217}
+  - component: {fileID: 1976223216}
+  m_Layer: 0
+  m_Name: ItemGenetay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1976223216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976223215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6009a0a66fb172049b69aceee42c625f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_fieldManager: {fileID: 868658183}
+  m_genOb: {fileID: 5457388352731594333, guid: 080e79d4114ecdc4bbb0b46e56f5e2ed, type: 3}
+  m_upperLimit: 0
+  m_lowerLimit: 0
+  m_Probability: 0
+  m_minimumTime: 0
+  m_lotteryInterval: 1
+  m_type: 1
+  m_start: 0
+--- !u!4 &1976223217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976223215}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.3463886, y: -2.1912606, z: -127.32564}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

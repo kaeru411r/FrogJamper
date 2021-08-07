@@ -46,9 +46,17 @@ public class Generator : MonoBehaviour
     [Tooltip("抽選間隔")]
     [SerializeField] float m_lotteryInterval = default;
 
+    [Tooltip("生成パターン")]
     [SerializeField] Type m_type = default;
 
+    [Tooltip("初めにフィールドにオブジェクトを一定数生成するか")]
     [SerializeField] bool m_start = default;
+
+    [Tooltip("生成数上限")]
+    [SerializeField] int m_maxInstantiateNumber = default;
+
+    [Tooltip("生成数上限時の対応")]
+    [SerializeField] Coping m_coping = default;
 
 
     private void Start()
@@ -145,9 +153,17 @@ public class Generator : MonoBehaviour
         Instantiate(m_genOb, new Vector3(Random.Range(m_ereaRX, m_ereaLX), Random.Range(m_ereaTY, m_ereaUY)), Quaternion.Euler(0, 0, 0));
     }
 
-    public enum Type
+    enum Type
     {
         Lotus,
         Item,
+    }
+
+    enum Coping
+    {
+        /// <summary>古いものから消していく</summary>
+        Destroy,
+        /// <summary>生成を中断する</summary>
+        Stop,
     }
 }

@@ -53,10 +53,18 @@ public class Generator : MonoBehaviour
     [SerializeField] bool m_start = default;
 
     [Tooltip("生成数上限")]
-    [SerializeField] int m_maxInstantiateNumber = default;
+    [SerializeField] int m_maxInstanceNumber = default;
 
     [Tooltip("生成数上限時の対応")]
     [SerializeField] Coping m_coping = default;
+
+    /// <summary>オブジェクトの生成モード</summary>
+    State m_state = State.Nomal;
+
+    List<GameObject> m_instanceObjects = new List<GameObject>();
+
+
+
 
 
     private void Start()
@@ -78,6 +86,32 @@ public class Generator : MonoBehaviour
     {
         lastLottery += Time.deltaTime;
 
+        //  消されたオブジェクトをリストから削除
+        for(int i = 0; i < m_instanceObjects.Count; i++)
+        {
+            if(m_instanceObjects[i] == null)
+            {
+                m_instanceObjects.RemoveAt(i);
+                i--;
+            }
+        }
+
+        if(m_instanceObjects.Count >= m_maxInstanceNumber && m_type == Type.Item)
+        {
+            if(m_coping == Coping.Destroy)
+            {
+                m_state = State.Desteoy;
+            }
+            else
+            {
+                m_state = State.Stop;
+            }
+        }
+        else
+        {
+            m_state = State.Nomal;
+        }
+
         if (lastLottery > m_lotteryInterval)
         {
             Lottery();
@@ -91,7 +125,7 @@ public class Generator : MonoBehaviour
     /// </summary>
     void Lottery()
     {
-        if (Random.Range(0f, 100) < m_Probability)   //1フレーム毎にm_probability%の確率でm_genObをm_erea内に生成
+        if (Random.Range(0f, 100) < m_Probability && m_state != State.Stop)   //1フレーム毎にm_probability%の確率でm_genObをm_erea内に生成
         {
             if (m_type == Type.Lotus)
             {
@@ -138,19 +172,46 @@ public class Generator : MonoBehaviour
     /// <summary>上半分のどこかにランダムで生成</summary>
     void UpeerHlafGenerate()
     {
-        Instantiate(m_genOb, new Vector3(Random.Range(m_ereaRX, m_ereaLX), Random.Range(m_ereaTY, m_centerY)), Quaternion.Euler(0, 0, 0));
+        Generate(Random.Range(m_ereaRX, m_ereaLX), Random.Range(m_ereaTY, m_centerY));
     }
 
     /// <summary>頂点のどこかにランダムで生成</summary>
     void TopGenerate()
     {
-        Instantiate(m_genOb, new Vector3(Random.Range(m_ereaRX, m_ereaLX), m_ereaTY), Quaternion.Euler(0, 0, 0));
+        Generate(Random.Range(m_ereaRX, m_ereaLX), m_ereaTY);
     }
 
     /// <summary>フィールド上のどこかにランダムで生成</summary>
     void PieGenerate()
     {
-        Instantiate(m_genOb, new Vector3(Random.Range(m_ereaRX, m_ereaLX), Random.Range(m_ereaTY, m_ereaUY)), Quaternion.Euler(0, 0, 0));
+        Generate(Random.Range(m_ereaRX, m_ereaLX), Random.Range(m_ereaTY, m_ereaUY));
+    }
+
+    /// <summary>
+    /// オブジェクトを生成する
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    void Generate(float x, float y)
+    {
+        m_instanceObjects.Add(Instantiate(m_genOb, new Vector2(x, y), Quaternion.Euler(0, 0, 0)));
+        if(m_state == State.Desteoy)
+        {
+            Destroy(m_instanceObjects[0], 0);
+        }
+    }
+
+    /// <summary>
+    /// オブジェクトを生成する
+    /// </summary>
+    /// <param name="position"></param>
+    void Generate(Vector2 position)
+    {
+        m_instanceObjects.Add(Instantiate(m_genOb, position, Quaternion.Euler(0, 0, 0)));
+        if (m_state == State.Desteoy)
+        {
+            Destroy(m_instanceObjects[0], 0);
+        }
     }
 
     enum Type
@@ -165,5 +226,13 @@ public class Generator : MonoBehaviour
         Destroy,
         /// <summary>生成を中断する</summary>
         Stop,
+    }
+
+    /// <summary>オブジェクトの生成モード</summary>
+    enum State
+    {
+        Nomal,
+        Stop,
+        Desteoy,
     }
 }

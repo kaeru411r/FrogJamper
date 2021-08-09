@@ -47,9 +47,9 @@ public class LifeUI : MonoBehaviour
         int index = 0;
 
         //  indexが万が一にもはみ出さないように想定より大きな数値のときは余剰分を切る
-        if(life > m_material.Length - 1 * m_range)
+        if(life > (m_material.Length - 1) * m_range)
         {
-            life = m_material.Length - 1 * m_range;
+            life = (m_material.Length - 1) * m_range;
         }
         //  lifeが0未満なら0に
         else if(life < 0)

@@ -15,7 +15,10 @@ public class ItemGenerator : MonoBehaviour
     [SerializeField] FieldManager m_fieldManager = default;
 
     [Tooltip("生成オブジェクト")]
-    [SerializeField] GameObject m_genOb;
+    [SerializeField] List<GameObject> m_genOb = new List<GameObject>();
+
+    [Tooltip("各アイテムの生成優先値")]
+    [SerializeField] int[] m_hierarchy = default;
 
 
 
@@ -31,7 +34,7 @@ public class ItemGenerator : MonoBehaviour
     [Tooltip("生成確立")]
     [SerializeField] float m_Probability;
     /// <summary>前回抽選からの秒数</summary>
-    float lastLottery = 0;
+    float m_lastLottery = 0;
     //
 
     [Tooltip("抽選間隔")]
@@ -44,9 +47,11 @@ public class ItemGenerator : MonoBehaviour
     [SerializeField] Coping m_coping = default;
 
     /// <summary>オブジェクトの生成モード</summary>
-    State m_state = State.Nomal;
+    List<State> m_states = new List<State>();
 
-    List<GameObject> m_instanceObjects = new List<GameObject>();
+    //List<GameObject> m_instanceObjects = new List<GameObject>();
+
+    List<List<GameObject>> m_instanceObjects = new List<List<GameObject>>();
 
 
 
@@ -59,19 +64,25 @@ public class ItemGenerator : MonoBehaviour
         m_ereaTY = m_fieldManager.FieldEreaTY - 1;
         m_ereaUY = m_fieldManager.FieldEreaUY + 1;
 
+        for(int i = 0; i < m_genOb.Count; i++)
+        {
+            m_instanceObjects.Add(new List<GameObject>());
+            m_states.Add(State.Nomal);
 
+        }
     }
     // Update is called once per frame
     void Update()
     {
-        lastLottery += Time.deltaTime;
+        m_lastLottery += Time.deltaTime;
 
-        if (lastLottery > m_lotteryInterval)    //  一定間隔おきに抽選を行う
+        if (m_lastLottery > m_lotteryInterval)    //  一定間隔おきに抽選を行う
         {
+            int index = ItemLottery();
             NullCheck();
             InstanseNumberCheck();
-            Lottery();
-            lastLottery = 0;
+            Lottery(index);
+            m_lastLottery = 0;
         }
 
     }
@@ -79,11 +90,11 @@ public class ItemGenerator : MonoBehaviour
     /// <summary>
     /// 生成の抽選
     /// </summary>
-    void Lottery()
+    void Lottery(int index)
     {
-        if (Random.Range(0f, 100) < m_Probability && m_state != State.Stop)   //1フレーム毎にm_probability%の確率でm_genObをm_erea内に生成
+        if (Random.Range(0f, 100) < m_Probability && m_states[index] != State.Stop)   //1フレーム毎にm_probability%の確率でm_genObをm_erea内に生成
         {
-            PieGenerate();
+            PieGenerate(index);
         }
     }
 
@@ -94,10 +105,13 @@ public class ItemGenerator : MonoBehaviour
     {
         for (int i = 0; i < m_instanceObjects.Count; i++)
         {
-            if (m_instanceObjects[i] == null)
+            for(int l = 0; l < m_instanceObjects[i].Count; l++)
             {
-                m_instanceObjects.RemoveAt(i);
-                i--;
+                if (m_instanceObjects[i][l] == null)
+                {
+                    m_instanceObjects[i].RemoveAt(l);
+                    l--;
+                }
             }
         }
     }
@@ -108,27 +122,30 @@ public class ItemGenerator : MonoBehaviour
     /// </summary>
     void InstanseNumberCheck()
     {
-        if (m_instanceObjects.Count >= m_maxInstanceNumber)
+        for(int i = 0; i < m_instanceObjects.Count; i++)
         {
-            if (m_coping == Coping.Destroy)
+            if (m_instanceObjects[i].Count >= m_maxInstanceNumber)
             {
-                m_state = State.Desteoy;
+                if (m_coping == Coping.Destroy)
+                {
+                    m_states[i] = State.Desteoy;
+                }
+                else
+                {
+                    m_states[i] = State.Stop;
+                }
             }
             else
             {
-                m_state = State.Stop;
+                m_states[i] = State.Nomal;
             }
-        }
-        else
-        {
-            m_state = State.Nomal;
         }
     }
 
     /// <summary>フィールド上のどこかにランダムで生成</summary>
-    void PieGenerate()
+    void PieGenerate(int index)
     {
-        Generate(Random.Range(m_ereaRX, m_ereaLX), Random.Range(m_ereaTY, m_ereaUY));
+        Generate(Random.Range(m_ereaRX, m_ereaLX), Random.Range(m_ereaTY, m_ereaUY), index);
     }
 
     /// <summary>
@@ -136,26 +153,55 @@ public class ItemGenerator : MonoBehaviour
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    void Generate(float x, float y)
+    void Generate(float x, float y, int index)
     {
-        m_instanceObjects.Add(Instantiate(m_genOb, new Vector2(x, y), Quaternion.Euler(0, 0, 0)));
-        if (m_state == State.Desteoy)
+        m_instanceObjects[index].Add(Instantiate(m_genOb[index], new Vector2(x, y), Quaternion.Euler(0, 0, 0)));
+        if (m_states[index] == State.Desteoy)
         {
-            Destroy(m_instanceObjects[0], 0);
+            Destroy(m_instanceObjects[index][0], 0);
         }
+
     }
 
     /// <summary>
     /// オブジェクトを生成する
     /// </summary>
     /// <param name="position"></param>
-    void Generate(Vector2 position)
+    void Generate(Vector2 position, int index)
     {
-        m_instanceObjects.Add(Instantiate(m_genOb, position, Quaternion.Euler(0, 0, 0)));
-        if (m_state == State.Desteoy)
+        index = ItemLottery();
+        m_instanceObjects[index].Add(Instantiate(m_genOb[index], position, Quaternion.Euler(0, 0, 0)));
+        if (m_states[index] == State.Desteoy)
         {
-            Destroy(m_instanceObjects[0], 0);
+            Destroy(m_instanceObjects[index][0], 0);
         }
+    }
+
+    /// <summary>
+    /// アイテムの抽選を行う
+    /// </summary>
+    /// <returns>index</returns>
+    int ItemLottery()
+    {
+        int index = 0;
+        int sum = 0;
+        for (int i = 0; i < m_genOb.Count && i < m_hierarchy.Length; i++)
+        {
+            sum += m_hierarchy[i];
+        }
+        int num = (int)Random.Range(0, sum);
+        sum = 0;
+        for (int i = 0; i < m_genOb.Count && i < m_hierarchy.Length; i++)
+        {
+            sum += m_hierarchy[i];
+            if (num <= sum)
+            {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
     }
 
 

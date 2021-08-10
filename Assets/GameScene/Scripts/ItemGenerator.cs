@@ -49,8 +49,7 @@ public class ItemGenerator : MonoBehaviour
     /// <summary>オブジェクトの生成モード</summary>
     List<State> m_states = new List<State>();
 
-    //List<GameObject> m_instanceObjects = new List<GameObject>();
-
+    /// <summary>実体化しているアイテム達</summary>
     List<List<GameObject>> m_instanceObjects = new List<List<GameObject>>();
 
 
@@ -64,11 +63,10 @@ public class ItemGenerator : MonoBehaviour
         m_ereaTY = m_fieldManager.FieldEreaTY - 1;
         m_ereaUY = m_fieldManager.FieldEreaUY + 1;
 
-        for(int i = 0; i < m_genOb.Count; i++)
+        for(int i = 0; i < m_genOb.Count; i++)  //  オブジェクトの種類の数管理用リストを拡張
         {
             m_instanceObjects.Add(new List<GameObject>());
             m_states.Add(State.Nomal);
-
         }
     }
     // Update is called once per frame
@@ -103,6 +101,7 @@ public class ItemGenerator : MonoBehaviour
     /// </summary>
     void NullCheck()
     {
+            //  m_instanceObjectsの全ての要素をチェックし、nullがあればそれを消す
         for (int i = 0; i < m_instanceObjects.Count; i++)
         {
             for(int l = 0; l < m_instanceObjects[i].Count; l++)
@@ -124,13 +123,14 @@ public class ItemGenerator : MonoBehaviour
     {
         for(int i = 0; i < m_instanceObjects.Count; i++)
         {
+                //  もし実体化しているオブジェクトの数が規定値を超えていた場合、決められた通りにm_statesを変更する
             if (m_instanceObjects[i].Count >= m_maxInstanceNumber)
             {
                 if (m_coping == Coping.Destroy)
                 {
                     m_states[i] = State.Desteoy;
                 }
-                else
+                else if(m_coping == Coping.Stop)
                 {
                     m_states[i] = State.Stop;
                 }
@@ -155,6 +155,7 @@ public class ItemGenerator : MonoBehaviour
     /// <param name="y"></param>
     void Generate(float x, float y, int index)
     {
+            //  アイテムを生成し、そのGameObjectをリストに格納する
         m_instanceObjects[index].Add(Instantiate(m_genOb[index], new Vector2(x, y), Quaternion.Euler(0, 0, 0)));
         if (m_states[index] == State.Desteoy)
         {
@@ -169,7 +170,7 @@ public class ItemGenerator : MonoBehaviour
     /// <param name="position"></param>
     void Generate(Vector2 position, int index)
     {
-        index = ItemLottery();
+        //  アイテムを生成し、そのGameObjectをリストに格納する
         m_instanceObjects[index].Add(Instantiate(m_genOb[index], position, Quaternion.Euler(0, 0, 0)));
         if (m_states[index] == State.Desteoy)
         {
@@ -185,13 +186,13 @@ public class ItemGenerator : MonoBehaviour
     {
         int index = 0;
         int sum = 0;
-        for (int i = 0; i < m_genOb.Count && i < m_hierarchy.Length; i++)
+        for (int i = 0; i < m_genOb.Count && i < m_hierarchy.Length; i++)   // 各アイテムの生成優先度を合計する
         {
             sum += m_hierarchy[i];
         }
-        int num = (int)Random.Range(0, sum);
+        int num = (int)Random.Range(0, sum);                                // その中からランダムにひとつ数値をとる
         sum = 0;
-        for (int i = 0; i < m_genOb.Count && i < m_hierarchy.Length; i++)
+        for (int i = 0; i < m_genOb.Count && i < m_hierarchy.Length; i++)   // その数値が優先度の列のどこに当たるかによって返す値を決める
         {
             sum += m_hierarchy[i];
             if (num <= sum)

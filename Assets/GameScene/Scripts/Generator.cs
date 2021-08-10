@@ -9,6 +9,8 @@ using UnityEngine;
 public class Generator : MonoBehaviour
 {
 
+    public static Generator Instance { get; private set; }
+
     [Tooltip("フィールド")]
     [SerializeField] FieldManager m_fieldManager = default;
 
@@ -28,7 +30,6 @@ public class Generator : MonoBehaviour
     float m_ereaRX;
     float m_ereaLX;
     float m_ereaTY;
-    float m_ereaUY;
     float m_centerY;
     //
 
@@ -46,21 +47,6 @@ public class Generator : MonoBehaviour
     [Tooltip("抽選間隔")]
     [SerializeField] float m_lotteryInterval = default;
 
-    [Tooltip("生成パターン")]
-    [SerializeField] Type m_type = default;
-
-    [Tooltip("初めにフィールドにオブジェクトを一定数生成するか")]
-    [SerializeField] bool m_start = default;
-
-    [Tooltip("生成数上限")]
-    [SerializeField] int m_maxInstanceNumber = default;
-
-    [Tooltip("生成数上限時の対応")]
-    [SerializeField] Coping m_coping = default;
-
-    /// <summary>オブジェクトの生成モード</summary>
-    State m_state = State.Nomal;
-
     List<GameObject> m_instanceObjects = new List<GameObject>();
 
 
@@ -72,13 +58,9 @@ public class Generator : MonoBehaviour
         m_ereaRX = m_fieldManager.FieldEreaRX - 1;
         m_ereaLX = m_fieldManager.FieldEreaLX + 1;
         m_ereaTY = m_fieldManager.FieldEreaTY - 1;
-        m_ereaUY = m_fieldManager.FieldEreaUY + 1;
         m_centerY = m_fieldManager.Position.y;
 
-        if (m_start)
-        {
-            SetUp();
-        }
+        SetUp();
 
     }
     // Update is called once per frame
@@ -86,34 +68,9 @@ public class Generator : MonoBehaviour
     {
         lastLottery += Time.deltaTime;
 
-        //  消されたオブジェクトをリストから削除
-        for(int i = 0; i < m_instanceObjects.Count; i++)
+        if (lastLottery > m_lotteryInterval)    //  一定間隔おきに抽選を行う
         {
-            if(m_instanceObjects[i] == null)
-            {
-                m_instanceObjects.RemoveAt(i);
-                i--;
-            }
-        }
-
-        if(m_instanceObjects.Count >= m_maxInstanceNumber && m_type == Type.Item)
-        {
-            if(m_coping == Coping.Destroy)
-            {
-                m_state = State.Desteoy;
-            }
-            else
-            {
-                m_state = State.Stop;
-            }
-        }
-        else
-        {
-            m_state = State.Nomal;
-        }
-
-        if (lastLottery > m_lotteryInterval)
-        {
+            NullCheck();
             Lottery();
             lastLottery = 0;
         }
@@ -125,16 +82,9 @@ public class Generator : MonoBehaviour
     /// </summary>
     void Lottery()
     {
-        if (Random.Range(0f, 100) < m_Probability && m_state != State.Stop)   //1フレーム毎にm_probability%の確率でm_genObをm_erea内に生成
+        if (Random.Range(0f, 100) < m_Probability)   //1フレーム毎にm_probability%の確率でm_genObをm_erea内に生成
         {
-            if (m_type == Type.Lotus)
-            {
-                TopGenerate();
-            }
-            else if (m_type == Type.Item)
-            {
-                PieGenerate();
-            }
+            TopGenerate();
             m_notGenerated = 0; //生成したらrelifをリセット
         }
         else
@@ -143,14 +93,7 @@ public class Generator : MonoBehaviour
         }
         if (m_notGenerated >= m_minimumTime)    //relifがm_timeを超えたらm_genObを生成し、relifをリセット
         {
-            if (m_type == Type.Lotus)
-            {
-                TopGenerate();
-            }
-            else if(m_type == Type.Item)
-            {
-                PieGenerate();
-            }
+            TopGenerate();
             m_notGenerated = 0;
         }
     }
@@ -169,6 +112,19 @@ public class Generator : MonoBehaviour
 
     }
 
+    /// <summary>消されたオブジェクトをリストから削除</summary>
+    void NullCheck()
+    {
+        for (int i = 0; i < m_instanceObjects.Count; i++)
+        {
+            if (m_instanceObjects[i] == null)
+            {
+                m_instanceObjects.RemoveAt(i);
+                i--;
+            }
+        }
+    }
+
     /// <summary>上半分のどこかにランダムで生成</summary>
     void UpeerHlafGenerate()
     {
@@ -181,12 +137,6 @@ public class Generator : MonoBehaviour
         Generate(Random.Range(m_ereaRX, m_ereaLX), m_ereaTY);
     }
 
-    /// <summary>フィールド上のどこかにランダムで生成</summary>
-    void PieGenerate()
-    {
-        Generate(Random.Range(m_ereaRX, m_ereaLX), Random.Range(m_ereaTY, m_ereaUY));
-    }
-
     /// <summary>
     /// オブジェクトを生成する
     /// </summary>
@@ -195,10 +145,6 @@ public class Generator : MonoBehaviour
     void Generate(float x, float y)
     {
         m_instanceObjects.Add(Instantiate(m_genOb, new Vector2(x, y), Quaternion.Euler(0, 0, 0)));
-        if(m_state == State.Desteoy)
-        {
-            Destroy(m_instanceObjects[0], 0);
-        }
     }
 
     /// <summary>
@@ -208,31 +154,5 @@ public class Generator : MonoBehaviour
     void Generate(Vector2 position)
     {
         m_instanceObjects.Add(Instantiate(m_genOb, position, Quaternion.Euler(0, 0, 0)));
-        if (m_state == State.Desteoy)
-        {
-            Destroy(m_instanceObjects[0], 0);
-        }
-    }
-
-    enum Type
-    {
-        Lotus,
-        Item,
-    }
-
-    enum Coping
-    {
-        /// <summary>古いものから消していく</summary>
-        Destroy,
-        /// <summary>生成を中断する</summary>
-        Stop,
-    }
-
-    /// <summary>オブジェクトの生成モード</summary>
-    enum State
-    {
-        Nomal,
-        Stop,
-        Desteoy,
     }
 }

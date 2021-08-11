@@ -2046,7 +2046,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6126b956099df2b42990721e45d8d74c, type: 3}
   - {fileID: 21300000, guid: 0080359347233274083f5ce33e7a4710, type: 3}
   m_splash: 0.5
-  m_startLife: 14
+  m_startLife: 1
   m_maxLife: 15
   m_lifeUI: {fileID: 1303205587}
   gm: {fileID: 236525344}
@@ -2432,7 +2432,7 @@ GameObject:
   - component: {fileID: 1976223216}
   m_Layer: 0
   m_Name: ItemGenetor
-  m_TagString: Untagged
+  m_TagString: Gimmick
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2454,8 +2454,8 @@ MonoBehaviour:
   - {fileID: 5457388352731594333, guid: 080e79d4114ecdc4bbb0b46e56f5e2ed, type: 3}
   - {fileID: 8837705773322920439, guid: 3d96c019726004b4aa5547b54ff6ca9b, type: 3}
   m_hierarchy: 2300000046000000
-  m_Probability: 100
-  m_lotteryInterval: 0.05
+  m_Probability: 50
+  m_lotteryInterval: 1
   m_maxInstanceNumber: 10
   m_coping: 0
 --- !u!4 &1976223217

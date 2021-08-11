@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.UI;
 
 
 /// <summary>
@@ -73,6 +74,9 @@ public class GameManager3 : MonoBehaviour
         {
             SetUp();
         }
+        //  returnをrestartに
+        var button = m_menus[1].GetComponent<Button>().onClick;
+        Debug.LogError(button);
     }
 
     // Update is called once per frame
@@ -101,13 +105,13 @@ public class GameManager3 : MonoBehaviour
 
 
         //  ゲームオーバー中の処理
-        if (m_gameover)
-        {
-            if (Input.anyKeyDown && Input.GetButton("Cancel") != true && !m_openMenu)   //  メニューの操作を阻害しない範囲で何かしらを押してこのシーンをリセット
-            {
-                SceneManager.LoadScene(m_thisSceanName);
-            }
-        }
+        //if (m_gameover)
+        //{
+        //    if (Input.anyKeyDown && Input.GetButton("Cancel") != true && !m_openMenu)   //  メニューの操作を阻害しない範囲で何かしらを押してこのシーンをリセット
+        //    {
+        //        SceneManager.LoadScene(m_thisSceanName);
+        //    }
+        //}
 
 
     }
@@ -146,6 +150,10 @@ public class GameManager3 : MonoBehaviour
 
         //  スコア固定
         m_score.Stop(true);
+
+        //  returnをrestartに
+        var button = m_menus[1].GetComponent<Button>().onClick;
+        Debug.LogError(button);
 
         //  ゲームオーバー表示
         m_gameOverText.SetActive(true);

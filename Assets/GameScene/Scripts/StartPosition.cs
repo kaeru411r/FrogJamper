@@ -35,11 +35,6 @@ public class StartPosition : MonoBehaviour
         yield return new WaitForSeconds(m_time);    //m_time経過後次の行へ
 
 
-
-        ////  sinkを利用するためFrogControllerを取得
-        //var frog = GameObject.Find("Frog");
-        //var frogC = frog.GetComponent<FrogController>();
-        ////
         Debug.Log(" ");
         m_frogController.SinkStart();
         Destroy(gameObject, 0); //このオブジェクトを消去

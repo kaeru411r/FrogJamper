@@ -76,7 +76,6 @@ public class GameManager3 : MonoBehaviour
         }
         //  returnをrestartに
         var button = m_menus[1].GetComponent<Button>().onClick;
-        Debug.LogError(button);
     }
 
     // Update is called once per frame
@@ -153,7 +152,6 @@ public class GameManager3 : MonoBehaviour
 
         //  returnをrestartに
         var button = m_menus[1].GetComponent<Button>().onClick;
-        Debug.LogError(button);
 
         //  ゲームオーバー表示
         m_gameOverText.SetActive(true);

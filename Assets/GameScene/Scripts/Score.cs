@@ -28,7 +28,7 @@ public class Score : MonoBehaviour
     [SerializeField] int m_bonusScore = default;
 
     /// <summary>ボーナススコア表示に使用する文末の文字列</summary>
-    string m_bonusText = " ";
+    string m_bonusText = "";
     /// <summary>ボーナススコア表示に使用する文末の文字列の数値</summary>
     int m_bonusTextValue = 0;
 
@@ -48,11 +48,13 @@ public class Score : MonoBehaviour
         if (!m_stop)
         {
             //  スコア計算部分
-            m_fractionTime += Time.deltaTime;            //1フレームの時間fTimeを取得
-            int iTime = (int)(m_fractionTime * 100);     //iTimeにfTimeを100倍した整数部分を代入
-            m_fractionTime -= iTime / 100f;              //iTimeに代入した分をfTimeから引く
-            m_score += iTime;                            //iTimeをscoreに加算
+            int iTime = (int)(Time.deltaTime * 100);                    //  Time.deltaTimeを100倍した数の整数部分でiTimeを初期化
+            m_fractionTime += Time.deltaTime - iTime / 100f;            //  iTimeに代入した分を除いたTime.deltaTimeをm_fractionTimeに足す
+            iTime += (int)(m_fractionTime * 100);                       //  m_fractionTimeを100倍した数の整数部分をiTimeに足す
+            m_fractionTime -= ((int)(m_fractionTime * 100)) / 100f;     //  m_fractionTimeからiTimeに足した分を引く
+            m_score += iTime;                                           //  m_socreにiTimeを足す
             //
+
             string text = "score " + m_score + m_bonusText;
             m_text.text = text;    //scoreを表示
         }
@@ -141,7 +143,7 @@ public class Score : MonoBehaviour
         m_bonusDisplayNumber--;
         if (m_bonusDisplayNumber <= 0)          //  もしこのインスタンス以降にインスタンス化されたこの関数が無ければ表示を消す
         {
-            m_bonusText = " ";
+            m_bonusText = "";
         }
     }
 }

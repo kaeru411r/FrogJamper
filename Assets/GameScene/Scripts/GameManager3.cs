@@ -181,6 +181,11 @@ public class GameManager3 : MonoBehaviour
         SceneManager.LoadScene(m_titleSceanName);
     }
 
+    public void ReStart()
+    {
+        SceneManager.LoadScene(m_thisSceanName);
+    }
+
     /// <summary>
     /// メニューを閉じる
     /// </summary>

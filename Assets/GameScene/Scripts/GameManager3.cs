@@ -17,8 +17,10 @@ public class GameManager3 : MonoBehaviour
     [SerializeField] GameObject m_frog = default;
     [Tooltip("プレイヤーコントロールクラス")]
     [SerializeField] FrogController m_frogController = default;
-    [Tooltip("Generatorコンポーネント")]
-    [SerializeField] Generator m_generator = default; 
+    //[Tooltip("Generatorコンポーネント")]
+    //[SerializeField] Generator m_generator = default;
+    [Tooltip("SceanManagerコントロールクラス")]
+    [SerializeField] SceanManager m_sceanManager = default;
     //
 
     //  メニュー関連
@@ -61,13 +63,13 @@ public class GameManager3 : MonoBehaviour
     private void Start()
     {
 
+
         //  乱数のseed値変更
         UnityEngine.Random.InitState(DateTime.Now.Second);
 
         //  フレームレートの固定
         Application.targetFrameRate = 60; //60FPSに設定
 
-        m_thisSceanName = SceneManager.GetActiveScene().name;
 
         //ゲーム開始時の処理
         if (!m_gamePlay)
@@ -122,16 +124,13 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void GameReplay()
     {
-        //  ゲームオーバー判定をtrueに
-        m_gameover = true;
-
         //  スコア固定
         m_score.Stop(true);
 
         //  スコア記録
         m_score.ScoreRecode();
 
-        SceneManager.LoadScene(m_thisSceanName);
+        m_sceanManager.GameReplay();
     }
 
     /// <summary>
@@ -178,12 +177,12 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void Exit()
     {
-        SceneManager.LoadScene(m_titleSceanName);
+        m_sceanManager.Exit();
     }
 
     public void ReStart()
     {
-        SceneManager.LoadScene(m_thisSceanName);
+        m_sceanManager.ReStart();
     }
 
     /// <summary>

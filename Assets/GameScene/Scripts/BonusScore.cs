@@ -19,5 +19,6 @@ public class BonusScore : ItemBase
         {
             score.AddScore();
         }
+        Destroy(gameObject, 0);
     }
 }

@@ -155,6 +155,10 @@ public class GameManager3 : MonoBehaviour
         //  ゲームオーバー表示
         m_gameOverText.SetActive(true);
         m_whiteBack.SetActive(true);
+        foreach (var menu in m_menus)
+        {
+            menu.SetActive(true);
+        }
 
 
         //  不必要なオブジェクトを消去

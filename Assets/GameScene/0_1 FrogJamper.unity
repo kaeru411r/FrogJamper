@@ -498,7 +498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_frog: {fileID: 1809575969}
   m_frogController: {fileID: 1809575970}
-  m_generator: {fileID: 0}
+  m_sceanManager: {fileID: 289180974}
   m_menus:
   - {fileID: 1116232548}
   - {fileID: 424978157}
@@ -630,6 +630,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 772e77cc91057454cbe2938645084af9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_gameManager: {fileID: 0}
+  m_score: {fileID: 0}
+  m_titleSceanName: 
 --- !u!4 &289180975
 Transform:
   m_ObjectHideFlags: 0
@@ -728,6 +731,17 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 236525344}
         m_MethodName: CloseMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 236525344}
+        m_MethodName: ReStart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1027697185312378487}
   m_Layer: 0
   m_Name: LifeBonus
-  m_TagString: Untagged
+  m_TagString: Gimmick
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -135,4 +135,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_speedUpperLimit: 0
   m_speedLowerLimit: 0
-  m_frogController: {fileID: 0}

@@ -12,6 +12,7 @@ using UnityEngine.UI;
 /// </summary>
 public class GameManager3 : MonoBehaviour
 {
+    public static GameManager3 Instance { get; private set; }
 
     [Tooltip("gameoverの参照先")]
     [SerializeField] GameObject m_frog = default;
@@ -24,8 +25,14 @@ public class GameManager3 : MonoBehaviour
     //
 
     //  メニュー関連
-    [Tooltip("メニュー")]
-    [SerializeField] List<GameObject> m_menus = default;
+    [Tooltip("リプレイボタン")]
+    [SerializeField] GameObject m_replay = default;
+    [Tooltip("リスタートボタン")]
+    [SerializeField] GameObject m_restart = default;
+    [Tooltip("サークル表示ボタン")]
+    [SerializeField] GameObject m_close;
+    [Tooltip("タイトルに戻るボタン")]
+    [SerializeField] GameObject m_exit;
     /// <summary>メニューを開いているか</summary>
     bool m_openMenu = false;
     //
@@ -33,6 +40,8 @@ public class GameManager3 : MonoBehaviour
 
     /// <summary>ゲームオーバー判定</summary>
     bool m_gameover = false;
+
+    public bool GameState { get { return m_gameover; } }
 
     /// <summary>ゲーム進行状況</summary>
     static bool m_gamePlay = false;
@@ -76,32 +85,14 @@ public class GameManager3 : MonoBehaviour
         {
             SetUp();
         }
-        //  returnをrestartに
-        var button = m_menus[1].GetComponent<Button>().onClick;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Cancel") && m_openMenu)  //メニュー閉じる
+        if (Input.GetButtonDown("Cancel"))  //メニュー開閉
         {
-            foreach (var menu in m_menus)
-            {
-                menu.SetActive(false);
-            }
-            m_openMenu = false;
-            Time.timeScale = 1;
-            m_frogController.Stop();
-        }
-        else if (Input.GetButtonDown("Cancel") && !m_openMenu) //  メニュー開く
-        {
-            foreach (var menu in m_menus)
-            {
-                menu.SetActive(true);
-            }
-            m_openMenu = true;
-            Time.timeScale = 0;
-            m_frogController.Stop();
+            Mnue();
         }
 
 
@@ -115,6 +106,27 @@ public class GameManager3 : MonoBehaviour
         //}
 
 
+    }
+
+    /// <summary>
+    /// メニューの開閉
+    /// </summary>
+    void Mnue()
+    {
+        if (m_openMenu)
+        {
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+        m_openMenu = !m_openMenu;
+        m_close.SetActive(!m_openMenu);
+        m_replay.SetActive(!m_openMenu);
+        m_restart.SetActive(!m_openMenu);
+        m_exit.SetActive(!m_openMenu);
+        m_frogController.Stop();
     }
 
     /// <summary>
@@ -149,16 +161,9 @@ public class GameManager3 : MonoBehaviour
         //  スコア固定
         m_score.Stop(true);
 
-        //  returnをrestartに
-        var button = m_menus[1].GetComponent<Button>().onClick;
-
         //  ゲームオーバー表示
         m_gameOverText.SetActive(true);
         m_whiteBack.SetActive(true);
-        foreach (var menu in m_menus)
-        {
-            menu.SetActive(true);
-        }
 
 
         //  不必要なオブジェクトを消去
@@ -194,13 +199,7 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void CloseMenu()
     {
-        foreach (var menu in m_menus)
-        {
-            menu.SetActive(false);
-        }
-        m_openMenu = false;
-        Time.timeScale = 1;
-        m_frogController.Stop();
+        Mnue();
     }
 
     public void SetUp()

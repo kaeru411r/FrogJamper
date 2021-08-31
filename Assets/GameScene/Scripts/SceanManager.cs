@@ -16,7 +16,7 @@ public class SceanManager : MonoBehaviour
 
     private void Start()
     {
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
 
         m_thisSceanName = SceneManager.GetActiveScene().name;
     }
@@ -40,6 +40,7 @@ public class SceanManager : MonoBehaviour
     public void Exit()
     {
         SceneManager.LoadScene(m_titleSceanName);
+        Destroy(gameObject, 0);
     }
 
     public void ReStart()

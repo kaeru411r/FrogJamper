@@ -30,9 +30,11 @@ public class GameManager3 : MonoBehaviour
     [Tooltip("リスタートボタン")]
     [SerializeField] GameObject m_restart = default;
     [Tooltip("サークル表示ボタン")]
-    [SerializeField] GameObject m_close;
+    [SerializeField] GameObject m_circle;
     [Tooltip("タイトルに戻るボタン")]
     [SerializeField] GameObject m_exit;
+    [Tooltip("閉じるボタン")]
+    [SerializeField] GameObject m_close;
     /// <summary>メニューを開いているか</summary>
     bool m_openMenu = false;
     //
@@ -122,10 +124,10 @@ public class GameManager3 : MonoBehaviour
             Time.timeScale = 0;
         }
         m_openMenu = !m_openMenu;
-        m_close.SetActive(!m_openMenu);
-        m_replay.SetActive(!m_openMenu);
-        m_restart.SetActive(!m_openMenu);
-        m_exit.SetActive(!m_openMenu);
+        m_circle.SetActive(m_openMenu);
+        m_restart.SetActive(m_openMenu);
+        m_exit.SetActive(m_openMenu);
+        m_close.SetActive(m_openMenu);
         m_frogController.Stop();
     }
 
@@ -162,8 +164,8 @@ public class GameManager3 : MonoBehaviour
         m_score.Stop(true);
 
         //  ゲームオーバー表示
-        m_gameOverText.SetActive(true);
         m_whiteBack.SetActive(true);
+        Mnue();
 
 
         //  不必要なオブジェクトを消去
@@ -178,7 +180,6 @@ public class GameManager3 : MonoBehaviour
         Destroy(m_frog, 0);
         //
 
-        m_score.ScoreReset();
     }
 
     /// <summary>

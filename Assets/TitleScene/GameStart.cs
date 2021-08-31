@@ -28,18 +28,11 @@ public class GameStart : MonoBehaviour
     /// <summary>ゲームを開始する</summary>
     private void Start()
     {
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
     }
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().name == m_stage1Name)
-        {
-            GameManager3 gameManager = GameObject.Find("GameManager").GetComponent<GameManager3>();
-            FrogController frogController = GameObject.Find("Frog").GetComponent<FrogController>();
-            frogController.Circle(m_circle);
-            Destroy(gameObject, 0);
-        }
         if (Input.GetButtonDown("Cancel") && m_openMenu)  //メニュー閉じる
         {
             m_menu.SetActive(false);
@@ -56,6 +49,18 @@ public class GameStart : MonoBehaviour
     public void NextScene()
     {
         SceneManager.LoadScene(m_stage1Name);
+        StartCoroutine(SetUp());
+    }
+
+    /// <summary>
+    /// ゲームシーンが読み込まれた後、セットアップを行う
+    /// </summary>
+    IEnumerator SetUp()
+    {
+        yield return null;
+
+        GameObject.Find("Frog").GetComponent<FrogController>().Circle(m_circle);
+        GameObject.Find("GameManager").GetComponent<GameManager3>().SetUp();
     }
 
     /// <summary>ゲームを終了</summary>

@@ -32,8 +32,8 @@ public class FrogController : MonoBehaviour
     [SerializeField] float m_cirWid = default;
     /// <summary>円を構成する線の数</summary>
     int segments = 370;
-    [Tooltip("円の表示をするか否か")]
-    [SerializeField] bool circle = true;
+    /// <summary>円のオンオフ</summary>
+    static bool m_circle = true;
     [Tooltip("円の切り替えボタン")]
     [SerializeField] Text circleButton = default;
     //
@@ -102,6 +102,7 @@ public class FrogController : MonoBehaviour
 
 
         //
+        Circle(m_circle);
 
         //  円の設定
         m_lineRen.startWidth = m_cirWid;
@@ -115,28 +116,7 @@ public class FrogController : MonoBehaviour
     void Update()
     {
         fps = 1 / Time.deltaTime;
-
-        //  プレイヤーが一定範囲を出たらゲームオーバー
-        if (transform.position.y < fieldManager.FieldEreaUY - 1)
-        {
-            state = FrogState.Dead;
-            Death();
-        }
-        if (transform.position.y > fieldManager.FieldEreaTY + 1)
-        {
-            state = FrogState.Dead;
-            Death();
-        }
-        if (transform.position.x < fieldManager.FieldEreaLX - 1)
-        {
-            state = FrogState.Dead;
-            Death();
-        }
-        if (transform.position.x > fieldManager.FieldEreaRX + 1)
-        {
-            state = FrogState.Dead;
-            Death();
-        }
+        EreaCheck();
         //
 
         //  蓮に乗っているときに行う処理
@@ -186,43 +166,78 @@ public class FrogController : MonoBehaviour
         ///  蓮に乗っているときに行う処理
 
 
-        //power秒間飛ぶ
-        //power秒間経つと処理が開始される。
-        IEnumerator AirTime()
+    }
+    //power秒間飛ぶ
+    //power秒間経つと処理が開始される。
+    IEnumerator AirTime()
+    {
+        yield return new WaitForSeconds(power); //  power秒間待つ
+                                                //  速度を0にする
+        m_rb.velocity = new Vector2(0, 0);
+
+        power = 0;
+
+        //  着地か着水か
+        if (contact) // 着地できる範囲に着地可能なオブジェクトがあったら接地判定をtrueにし、向きを正す
         {
-            yield return new WaitForSeconds(power); //  power秒間待つ
-            //  速度を0にする
-            m_rb.velocity = new Vector2(0, 0);
-
-            power = 0;
-
-            //  着地か着水か
-            if (contact) // 着地できる範囲に着地可能なオブジェクトがあったら接地判定をtrueにし、向きを正す
-            {
-                Debug.Log("着地着水");
-                m_sr.sprite = m_sprite[0];
-                state = FrogState.Grounded;
-                transform.up = new Vector2(0, 0);
-            }
-            else  //そうでなければ水没判定をtrueにする
-            {
-                StartCoroutine(Sink());
-                Debug.Log("水没true");
-            }
+            Debug.Log("着地着水");
+            m_sr.sprite = m_sprite[0];
+            state = FrogState.Grounded;
+            transform.up = new Vector2(0, 0);
         }
-
-        void Jump()
+        else  //そうでなければ水没判定をtrueにする
         {
-            m_sr.sprite = m_sprite[1];
-            state = FrogState.MidAir;
-            m_rb.velocity = transform.up * m_speed;
-
-            //  円を消す
-            m_lineRen.enabled = false;
+            StartCoroutine(Sink());
+            Debug.Log("水没true");
         }
     }
 
-    //  旋回
+    /// <summary>
+    /// 跳ぶ
+    /// </summary>
+    void Jump()
+    {
+        m_sr.sprite = m_sprite[1];
+        state = FrogState.MidAir;
+        m_rb.velocity = transform.up * m_speed;
+
+        //  円を消す
+        m_lineRen.enabled = false;
+    }
+
+    /// <summary>
+    /// プレイヤーがエリア外に出ていたらDeathを呼ぶ
+    /// </summary>
+    void EreaCheck()
+    {
+
+        //  プレイヤーが一定範囲を出たらゲームオーバー
+        if (transform.position.y < fieldManager.FieldEreaUY - 1)
+        {
+            state = FrogState.Dead;
+            Death();
+        }
+        if (transform.position.y > fieldManager.FieldEreaTY + 1)
+        {
+            state = FrogState.Dead;
+            Death();
+        }
+        if (transform.position.x < fieldManager.FieldEreaLX - 1)
+        {
+            state = FrogState.Dead;
+            Death();
+        }
+        if (transform.position.x > fieldManager.FieldEreaRX + 1)
+        {
+            state = FrogState.Dead;
+            Death();
+        }
+    }
+
+    /// <summary>
+    /// 旋回する
+    /// </summary>
+    /// <param name="bearing"></param>
     void Gyration(float bearing)
     {
         if (bearing < 0 && transform.rotation.z < m_agnleLimit)  //  m_angVeloの速さで左を向く
@@ -235,14 +250,18 @@ public class FrogController : MonoBehaviour
         }
     }
 
-    //  ジャンプ時間チャージ
+    /// <summary>
+    /// ジャンプ時間チャージ
+    /// </summary>
     void Accumulate()
     {
         power += m_accumulate * Time.deltaTime;
 
         //  円描画部分
-        if (circle)
+        if (m_circle)
         {
+            m_lineRen.startWidth = 0.1f;
+            m_lineRen.endWidth = 0.1f;
             var points = new Vector3[segments];
             for (int i = 0; i < segments; i++)
             {
@@ -259,6 +278,11 @@ public class FrogController : MonoBehaviour
 
             //  円の位置を設定   
             m_lineRen.SetPositions(points);
+        }
+        else
+        {
+            m_lineRen.startWidth = 0;
+            m_lineRen.endWidth = 0;
         }
     }
 
@@ -359,14 +383,7 @@ public class FrogController : MonoBehaviour
 
     public void Stop(bool tf)
     {
-        if (tf)
-        {
-            stop = true;
-        }
-        else
-        {
-            stop = false;
-        }
+        stop = tf;
     }
 
     /// <summary>円の表示変更</summary>
@@ -374,33 +391,35 @@ public class FrogController : MonoBehaviour
     {
         if (tf)
         {
-            circle = true;
-            circleButton.text = "Circle On";
-            m_lineRen.enabled = true;
+            circleButton.text = "Circle Off";
+            m_lineRen.startWidth = 0.1f;
+            m_lineRen.endWidth = 0.1f;
         }
         else
         {
-            circle = false;
-            circleButton.text = "Circle Off";
-            m_lineRen.enabled = false;
+            circleButton.text = "Circle On";
+            m_lineRen.startWidth = 0;
+            m_lineRen.endWidth = 0;
         }
+        m_circle = tf;
     }
 
     /// <summary>円の表示切替</summary>
     public void Circle()
     {
-        if (circle)
+        if (m_circle)
         {
-            circle = false;
-            circleButton.text = "Circle Off";
-            m_lineRen.enabled = false;
+            circleButton.text = "Circle On";
+            m_lineRen.startWidth = 0;
+            m_lineRen.endWidth = 0;
         }
         else
         {
-            circle = true;
-            circleButton.text = "Circle On";
-            m_lineRen.enabled = true;
+            circleButton.text = "Circle Off";
+            m_lineRen.startWidth = 0.1f;
+            m_lineRen.endWidth = 0.1f;
         }
+        m_circle = !m_circle;
     }
 
     /// <summary>lifeを初期値に戻す</summary>

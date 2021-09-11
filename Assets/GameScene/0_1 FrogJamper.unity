@@ -301,9 +301,9 @@ MonoBehaviour:
   m_fieldManager: {fileID: 868658183}
   m_genOb: {fileID: 4514591312656256835, guid: b53d6d7b83d084d44babd8d164b04c9d, type: 3}
   m_upperLimit: 3
-  m_lowerLimit: 4
+  m_lowerLimit: 1
   m_Probability: 25
-  m_minimumTime: 5
+  m_passportErea: 3
   m_lotteryInterval: 0.5
 --- !u!4 &71928459
 Transform:
@@ -1636,7 +1636,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02cd210f085c9894b94af4ac30cadffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_time: 4
+  m_time: 7
   m_frogController: {fileID: 1809575970}
   m_fieldManager: {fileID: 868658183}
 --- !u!58 &1206707742
@@ -2663,7 +2663,7 @@ MonoBehaviour:
   m_hierarchy: 3200000046000000
   m_Probability: 50
   m_lotteryInterval: 1
-  m_maxInstanceNumber: 10
+  m_maxInstanceNumber: 5
   m_coping: 1
 --- !u!4 &1976223217
 Transform:

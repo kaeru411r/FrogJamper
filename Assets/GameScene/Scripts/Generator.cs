@@ -14,6 +14,7 @@ public class Generator : MonoBehaviour
     [Tooltip("フィールド")]
     [SerializeField] FieldManager m_fieldManager = default;
 
+
     [Tooltip("生成オブジェクト")]
     [SerializeField] GameObject m_genOb;
 
@@ -36,8 +37,8 @@ public class Generator : MonoBehaviour
     //  生成確立関連
     [Tooltip("生成確立")]
     [SerializeField] float m_Probability;
-    [Tooltip("最低保証秒数")]
-    [SerializeField] int m_minimumTime;
+    [Tooltip("最低保証エリア")]
+    [SerializeField] float m_passportErea;
     /// <summary>連続非生成秒数</summary>
     float m_notGenerated = 0;
     /// <summary>前回抽選からの秒数</summary>
@@ -47,6 +48,7 @@ public class Generator : MonoBehaviour
     [Tooltip("抽選間隔")]
     [SerializeField] float m_lotteryInterval = default;
 
+    /// <summary>現在存在する蓮の葉</summary>
     List<GameObject> m_instanceObjects = new List<GameObject>();
 
 
@@ -67,10 +69,26 @@ public class Generator : MonoBehaviour
     void Update()
     {
         lastLottery += Time.deltaTime;
-
-        if (lastLottery > m_lotteryInterval)    //  一定間隔おきに抽選を行う
+        LostObjectCheck();
+        if (m_instanceObjects.Count > 0)
         {
-            NullCheck();
+            bool beingness = false;
+            foreach (var ob in m_instanceObjects)   //  一定エリアより上に蓮が無くなったら湧かす
+            {
+                if (ob.transform.position.y > m_fieldManager.transform.position.y - m_passportErea)
+                {
+                    beingness = true;
+                    break;
+                }
+            }
+            if (!beingness)
+            {
+                TopGenerate();
+            }
+        }
+
+        if (lastLottery > m_lotteryInterval && m_instanceObjects.Count < m_upperLimit)    //  一定間隔おきで一定個数以下の時抽選
+        {
             Lottery();
             lastLottery = 0;
         }
@@ -87,17 +105,16 @@ public class Generator : MonoBehaviour
             TopGenerate();
             m_notGenerated = 0; //生成したらrelifをリセット
         }
-        else
-        {
-            m_notGenerated += lastLottery;   //生成しなかったフレームはrelifを＋１
-        }
-        if (m_notGenerated >= m_minimumTime)    //relifがm_timeを超えたらm_genObを生成し、relifをリセット
-        {
-            TopGenerate();
-            m_notGenerated = 0;
-        }
+        //else
+        //{
+        //    m_notGenerated += lastLottery;   //生成しなかったフレームはrelifを＋１
+        //}
+        //if (m_notGenerated >= m_minimumTime)    //relifがm_timeを超えたらm_genObを生成し、relifをリセット
+        //{
+        //    TopGenerate();
+        //    m_notGenerated = 0;
+        //}
     }
-
 
 
     /// <summary>
@@ -113,7 +130,7 @@ public class Generator : MonoBehaviour
     }
 
     /// <summary>消されたオブジェクトをリストから削除</summary>
-    void NullCheck()
+    void LostObjectCheck()
     {
         for (int i = 0; i < m_instanceObjects.Count; i++)
         {

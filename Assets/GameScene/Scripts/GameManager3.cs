@@ -51,11 +51,17 @@ public class GameManager3 : MonoBehaviour
     [Tooltip("ゲームオーバー表示")]
     [SerializeField] GameObject m_gameOverText = default;
 
+    [Tooltip("死亡時の待機時間")]
+    [SerializeField] float m_waitTime;
+
     [Tooltip("スコアボード")]
     [SerializeField] Score m_score = default;
 
     [Tooltip("スコアボード背景")]
-    [SerializeField] GameObject m_whiteBack = default;
+    [SerializeField] GameObject m_backGround = default;
+
+    [Tooltip("残りライフ用テキスト")]
+    [SerializeField] Text m_lifeText;
 
     [Tooltip("タイトルシーンの名前")]
     [SerializeField] string m_titleSceanName = default;
@@ -138,12 +144,23 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void GameReplay()
     {
+        m_lifeText.gameObject.SetActive(true);
+        m_lifeText.text = "Life  " + m_frogController.LIfe;
+
         //  スコア固定
         m_score.Stop(true);
 
         //  スコア記録
         m_score.ScoreRecode();
 
+        m_backGround.SetActive(true);
+
+        StartCoroutine(ReplayStandby());
+    }
+
+    IEnumerator ReplayStandby()
+    {
+        yield return new WaitForSeconds(m_waitTime);
         m_sceanManager.GameReplay();
     }
 
@@ -164,7 +181,7 @@ public class GameManager3 : MonoBehaviour
         m_score.Stop(true);
 
         //  ゲームオーバー表示
-        m_whiteBack.SetActive(true);
+        m_backGround.SetActive(true);
         Mnue();
 
 

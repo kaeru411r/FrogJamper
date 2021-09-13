@@ -8,11 +8,12 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1185429334586719736}
+  - component: {fileID: 7729332735520877717}
   - component: {fileID: 3322316695611582979}
   - component: {fileID: 2509152006374577259}
   - component: {fileID: 6696285458095850121}
   - component: {fileID: 9001453879234878566}
+  - component: {fileID: 7109794886180698499}
   m_Layer: 0
   m_Name: BonusScore
   m_TagString: Gimmick
@@ -20,8 +21,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1185429334586719736
-Transform:
+--- !u!224 &7729332735520877717
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -34,6 +35,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &3322316695611582979
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -136,3 +142,11 @@ MonoBehaviour:
   m_speedUpperLimit: 0
   m_speedLowerLimit: 0
   m_factor: 1
+--- !u!222 &7109794886180698499
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837705773322920439}
+  m_CullTransparentMesh: 0

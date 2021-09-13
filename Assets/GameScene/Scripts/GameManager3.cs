@@ -76,9 +76,12 @@ public class GameManager3 : MonoBehaviour
     [SerializeField] int m_lowerLimit;
     //
 
+    List <GameObject> m_destroyObject = new List<GameObject>();
+
 
     private void Start()
     {
+        //  消去するオブジェクトをしゅと
 
 
         //  乱数のseed値変更
@@ -144,14 +147,28 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void GameReplay()
     {
-        m_lifeText.gameObject.SetActive(true);
-        m_lifeText.text = "Life  " + m_frogController.LIfe;
+
+        //  不必要なオブジェクトを消去
+        foreach (var go in GameObject.FindGameObjectsWithTag("Gimmick"))
+        {
+            Destroy(go);
+        }
+        foreach (var go in GameObject.FindGameObjectsWithTag("Lotus"))
+        {
+            Destroy(go);
+        }
+        Destroy(m_frog, 0);
+        //
 
         //  スコア固定
         m_score.Stop(true);
 
         //  スコア記録
         m_score.ScoreRecode();
+
+        //  残機と今ターンでのスコア表示
+        m_lifeText.gameObject.SetActive(true);
+        m_lifeText.text = "Life  " + m_frogController.LIfe + "\n" + m_score.ScoreText;
 
         m_backGround.SetActive(true);
 
@@ -182,17 +199,18 @@ public class GameManager3 : MonoBehaviour
 
         //  ゲームオーバー表示
         m_backGround.SetActive(true);
+        m_gameOverText.SetActive(true);
         Mnue();
 
 
         //  不必要なオブジェクトを消去
         foreach (var go in GameObject.FindGameObjectsWithTag("Gimmick"))
         {
-            Destroy(go, 0);
+            Destroy(go);
         }
         foreach (var go in GameObject.FindGameObjectsWithTag("Lotus"))
         {
-            Destroy(go, 0);
+            Destroy(go);
         }
         Destroy(m_frog, 0);
         //

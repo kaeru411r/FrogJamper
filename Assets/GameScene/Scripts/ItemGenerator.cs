@@ -19,6 +19,8 @@ public class ItemGenerator : MonoBehaviour
 
     [Tooltip("各アイテムの生成優先値")]
     [SerializeField] int[] m_hierarchy = default;
+    [Tooltip("各アイテムの生成数上限")]
+    [SerializeField] int[] m_maxInstanceNumbers = default;
 
 
 
@@ -121,10 +123,10 @@ public class ItemGenerator : MonoBehaviour
     /// </summary>
     void InstanseNumberCheck()
     {
-        for(int i = 0; i < m_instanceObjects.Count; i++)
+        for(int i = 0; i < m_instanceObjects.Count && i < m_maxInstanceNumbers.Length; i++)
         {
                 //  もし実体化しているオブジェクトの数が規定値を超えていた場合、決められた通りにm_statesを変更する
-            if (m_instanceObjects[i].Count >= m_maxInstanceNumber)
+            if (m_instanceObjects[i].Count >= m_maxInstanceNumbers[i])
             {
                 if (m_coping == Coping.Destroy)
                 {

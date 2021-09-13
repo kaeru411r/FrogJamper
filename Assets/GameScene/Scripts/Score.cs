@@ -14,6 +14,8 @@ public class Score : MonoBehaviour
 
     /// <summary>スコアを記録</summary>
     static int m_score = 0;
+    string m_scoreText;
+    public string ScoreText { get { return m_scoreText; } }
 
     /// <summary>各プレイのスコアを記録</summary>
     static List<int> m_scores = new List<int>();
@@ -97,6 +99,7 @@ public class Score : MonoBehaviour
         {
             lastScore += buf;
         }
+        m_scoreText = "This turn score" + (m_score - lastScore);
         m_scores.Add(m_score - lastScore);
         Debug.Log(m_score);
         foreach (var buf in m_scores)

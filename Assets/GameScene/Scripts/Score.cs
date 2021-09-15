@@ -14,6 +14,8 @@ public class Score : MonoBehaviour
 
     /// <summary>スコアを記録</summary>
     static int m_score = 0;
+    public int ScoreGet { get { return m_score; } }
+
     string m_scoreText;
     public string ScoreText { get { return m_scoreText; } }
 
@@ -39,6 +41,12 @@ public class Score : MonoBehaviour
     /// <summary>動作中のボーナススコア表示関数の数</summary>
     int m_bonusDisplayNumber = 0;
 
+    [Tooltip("クリアに必要なスコア")]
+    [SerializeField] int m_goal;
+
+    [Tooltip("ゲームマネージャー")]
+    [SerializeField] GameManager3 m_gameManager;
+
 
 
     private void Start()
@@ -51,6 +59,11 @@ public class Score : MonoBehaviour
     {
         if (!m_stop)
         {
+            if (m_score >= 1000000000)  //  スコアがint型の限界を超えないように
+            {
+                m_score = 1000000000;
+            }
+
             //  スコア計算部分
             int iTime = (int)(Time.deltaTime * 100);                    //  Time.deltaTimeを100倍した数の整数部分でiTimeを初期化
             m_fractionTime += Time.deltaTime - iTime / 100f;            //  iTimeに代入した分を除いたTime.deltaTimeをm_fractionTimeに足す
@@ -62,12 +75,14 @@ public class Score : MonoBehaviour
             string text = "score " + m_score + m_bonusText;
             m_text.text = text;    //scoreを表示
         }
+
+        if(m_score >= m_goal && !m_stop)    //  ゲームクリア判定
+        {
+            m_gameManager.GameClear();
+        }
+
     }
 
-    public void Stop()
-    {
-        m_stop = !m_stop;
-    }
 
     public void Stop(bool tf)
     {
@@ -159,7 +174,7 @@ public class Score : MonoBehaviour
 
         //  
 
-        Stop();
+        Stop(true);
         ScoreRecode();
 
     }

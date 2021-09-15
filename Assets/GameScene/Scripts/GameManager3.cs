@@ -45,15 +45,14 @@ public class GameManager3 : MonoBehaviour
     public bool GameState { get { return m_gameover; } }
 
     /// <summary>ゲーム進行状況</summary>
-    static bool m_gamePlay = false;
+    static State m_state = new State();
+
 
     [Tooltip("ゲームオーバー表示")]
     [SerializeField] GameObject m_gameOverText = default;
 
     [Tooltip("ゲームオーバー時に呼ぶセット")]
     [SerializeField] UnityEvent m_gameOvarMethod;
-    [Tooltip("リスタート時に呼ぶセット")]
-    [SerializeField] UnityEvent m_replayMethod;
 
     [Tooltip("死亡時の待機時間")]
     [SerializeField] float m_waitTime;
@@ -71,32 +70,28 @@ public class GameManager3 : MonoBehaviour
     string m_thisSceanName = default;
 
 
-    //  蓮の初期生成数
-    [Tooltip("蓮の初期生成数上限")]
-    [SerializeField] int m_upperLimit;
-    [Tooltip("蓮の初期生成数下限")]
-    [SerializeField] int m_lowerLimit;
-    //
 
 
 
     private void Start()
     {
-        //  消去するオブジェクトをしゅと
 
 
         //  乱数のseed値変更
         UnityEngine.Random.InitState(DateTime.Now.Second);
 
-        //  フレームレートの固定
-        Application.targetFrameRate = 60; //60FPSに設定
-
 
         //ゲーム開始時の処理
-        if (!m_gamePlay)
+        if (m_state == State.Start)
         {
             SetUp();
         }
+        else
+        {
+            m_state = State.Play;
+        }
+
+
     }
 
     // Update is called once per frame
@@ -106,17 +101,6 @@ public class GameManager3 : MonoBehaviour
         {
             Mnue();
         }
-
-
-        //  ゲームオーバー中の処理
-        //if (m_gameover)
-        //{
-        //    if (Input.anyKeyDown && Input.GetButton("Cancel") != true && !m_openMenu)   //  メニューの操作を阻害しない範囲で何かしらを押してこのシーンをリセット
-        //    {
-        //        SceneManager.LoadScene(m_thisSceanName);
-        //    }
-        //}
-
 
     }
 
@@ -148,24 +132,12 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void GameReplay()
     {
+        //  状態をリプレイ待機に
+        m_state = State.Replay;
+
         m_gameOvarMethod.Invoke();
 
-        //  不必要なオブジェクトを消去
-        //foreach (var go in GameObject.FindGameObjectsWithTag("Gimmick"))
-        //{
-        //    Destroy(go);
-        //}
         Destroy(m_frog, 0);
-        //
-
-        ////  スコア固定
-        //m_score.Stop(true);
-
-        ////  スコア記録
-        //m_score.ScoreRecode();
-
-
-        //m_backGround.SetActive(true);
 
         StartCoroutine(ReplayStandby());
     }
@@ -184,30 +156,33 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void GameOver()
     {
+
+        //  状態をゲームオーバーに
+        m_state = State.GameOvar;
+
         m_gameOvarMethod.Invoke();
 
         //  ゲームオーバー判定をtrueに
         m_gameover = true;
 
-        //  ゲームプレイを停止扱いに
-        m_gamePlay = true;
 
-        //  スコア固定
-        //m_score.Stop(true);
-
-        //  ゲームオーバー表示
-        //m_backGround.SetActive(true);
-        //m_gameOverText.SetActive(true);
         Mnue();
 
-
-        //  不必要なオブジェクトを消去
-        //foreach (var go in GameObject.FindGameObjectsWithTag("Gimmick"))
-        //{
-        //    Destroy(go);
-        //}
         Destroy(m_frog, 0);
         //
+
+    }
+
+    public void GameClear()
+    {
+        //  状態をクリアに
+        m_state = State.Clear;
+
+        m_gameOvarMethod.Invoke();
+
+        Mnue();
+
+        Destroy(m_frog, 0);
 
     }
 
@@ -234,11 +209,32 @@ public class GameManager3 : MonoBehaviour
 
     public void SetUp()
     {
-        m_gamePlay = true;
+        m_state = State.Play;
         Time.timeScale = 1;
         m_score.ScoreReset();
         m_frogController.LifeReset();
-        //m_generator.SetUp();
+    }
+
+
+    public int StateGet()
+    {
+        return (int)m_state;
+    }
+
+
+    /// <summary>プレイ状況</summary>
+    enum State
+    {
+        /// <summary>プレイ開始前</summary>
+        Start,
+        /// <summary>プレイ中</summary>
+        Play,
+        /// <summary>リプレイ待機</summary>
+        Replay,
+        /// <summary>ゲームオーバー</summary>
+        GameOvar,
+        /// <summary>クリア</summary>
+        Clear,
     }
 }
 

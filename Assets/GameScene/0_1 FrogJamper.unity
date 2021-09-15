@@ -446,7 +446,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1206031803}
-        m_MethodName: ScoreRecode
+        m_MethodName: End
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -467,9 +467,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1754858924}
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 657464645}
+        m_MethodName: Display
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -478,7 +478,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 657464641}
+      - m_Target: {fileID: 1754858924}
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
@@ -500,11 +500,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_replayMethod:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1206031803}
-        m_MethodName: Stop
+      - m_Target: {fileID: 264467435}
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -512,36 +509,12 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1206031803}
-        m_MethodName: ScoreRecode
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
   m_waitTime: 2
   m_score: {fileID: 1206031803}
   m_backGround: {fileID: 1754858924}
   m_titleSceanName: Title
-  m_upperLimit: 0
-  m_lowerLimit: 0
 --- !u!4 &236525345
 Transform:
   m_ObjectHideFlags: 0
@@ -1086,7 +1059,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_frog: {fileID: 0}
   m_score: {fileID: 0}
-  m_endText: {fileID: 0}
+  m_gameManager3: {fileID: 0}
+  m_posY: 0
+  m_size: 0
 --- !u!1 &575122780
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,7 +1220,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &657464642
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1297,7 +1272,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Life  0  '
+  m_Text: 
 --- !u!222 &657464644
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1320,7 +1295,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_frog: {fileID: 1809575970}
   m_score: {fileID: 1206031803}
-  m_endText: {fileID: 657464643}
+  m_gameManager3: {fileID: 236525344}
+  m_posY: 240
+  m_size: 70
 --- !u!1 &696174010
 GameObject:
   m_ObjectHideFlags: 0
@@ -1896,6 +1873,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_bonusScore: 100
   m_bonusDisplayTime: 1.5
+  m_goal: 10000
+  m_gameManager: {fileID: 236525344}
 --- !u!114 &1206031804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2171,7 +2150,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 175d2a9c92cb37f48be228755acc64ea, type: 2}
   - {fileID: 2100000, guid: 5c737fc396380474a95453aae9601e46, type: 2}
   - {fileID: 2100000, guid: cd3b285aff45ac948bfcbd7be2f9ad81, type: 2}
-  m_lifeText: {fileID: 657464643}
 --- !u!1 &1491516885
 GameObject:
   m_ObjectHideFlags: 0

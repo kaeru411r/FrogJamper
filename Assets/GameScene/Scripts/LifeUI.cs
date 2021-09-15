@@ -25,6 +25,9 @@ public class LifeUI : MonoBehaviour
     /// <summary>life表示用オブジェクトの数</summary>
     int m_range = 0;
 
+    [Tooltip("ゲームオーバー時残機用テキスト")]
+    [SerializeField] Text m_lifeText;
+
 
     private void Start()
     {
@@ -75,5 +78,10 @@ public class LifeUI : MonoBehaviour
         {
             m_images[(m_range-1) - i].material = m_material[index - 1];
         }
+    }
+
+    public void End()
+    {
+
     }
 }

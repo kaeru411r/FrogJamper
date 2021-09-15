@@ -14,6 +14,8 @@ public class Score : MonoBehaviour
 
     /// <summary>スコアを記録</summary>
     static int m_score = 0;
+    string m_scoreText;
+    public string ScoreText { get { return m_scoreText; } }
 
     /// <summary>各プレイのスコアを記録</summary>
     static List<int> m_scores = new List<int>();
@@ -36,6 +38,8 @@ public class Score : MonoBehaviour
     [SerializeField] float m_bonusDisplayTime = default;
     /// <summary>動作中のボーナススコア表示関数の数</summary>
     int m_bonusDisplayNumber = 0;
+
+
 
     private void Start()
     {
@@ -97,7 +101,8 @@ public class Score : MonoBehaviour
         {
             lastScore += buf;
         }
-        m_scores.Add(m_score - lastScore);
+        m_scoreText = "This turn score" + (m_score - lastScore);    //  死亡時テキスト設定
+        m_scores.Add(m_score - lastScore);                          //  今世のスコアを記録
         Debug.Log(m_score);
         foreach (var buf in m_scores)
         {
@@ -145,5 +150,17 @@ public class Score : MonoBehaviour
         {
             m_bonusText = "";
         }
+    }
+
+    /// <summary>死亡時に行う処理</summary>
+    public void End()
+    {
+
+
+        //  
+
+        Stop();
+        ScoreRecode();
+
     }
 }

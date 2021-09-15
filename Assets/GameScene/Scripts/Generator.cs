@@ -95,6 +95,13 @@ public class Generator : MonoBehaviour
 
     }
 
+    /// <summary>蓮の葉を全消去</summary>
+    public void Destroy()
+    {
+        foreach (var go in m_instanceObjects)
+            Destroy(go, 0);
+    }
+
     /// <summary>
     /// 生成の抽選
     /// </summary>

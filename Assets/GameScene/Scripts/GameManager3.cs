@@ -1,9 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 
 /// <summary>
@@ -51,11 +50,20 @@ public class GameManager3 : MonoBehaviour
     [Tooltip("ゲームオーバー表示")]
     [SerializeField] GameObject m_gameOverText = default;
 
+    [Tooltip("ゲームオーバー時に呼ぶセット")]
+    [SerializeField] UnityEvent m_gameOvarMethod;
+    [Tooltip("リスタート時に呼ぶセット")]
+    [SerializeField] UnityEvent m_replayMethod;
+
+    [Tooltip("死亡時の待機時間")]
+    [SerializeField] float m_waitTime;
+
     [Tooltip("スコアボード")]
     [SerializeField] Score m_score = default;
 
     [Tooltip("スコアボード背景")]
-    [SerializeField] GameObject m_whiteBack = default;
+    [SerializeField] GameObject m_backGround = default;
+
 
     [Tooltip("タイトルシーンの名前")]
     [SerializeField] string m_titleSceanName = default;
@@ -71,8 +79,10 @@ public class GameManager3 : MonoBehaviour
     //
 
 
+
     private void Start()
     {
+        //  消去するオブジェクトをしゅと
 
 
         //  乱数のseed値変更
@@ -138,11 +148,31 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void GameReplay()
     {
-        //  スコア固定
-        m_score.Stop(true);
+        m_gameOvarMethod.Invoke();
 
-        //  スコア記録
-        m_score.ScoreRecode();
+        //  不必要なオブジェクトを消去
+        //foreach (var go in GameObject.FindGameObjectsWithTag("Gimmick"))
+        //{
+        //    Destroy(go);
+        //}
+        Destroy(m_frog, 0);
+        //
+
+        ////  スコア固定
+        //m_score.Stop(true);
+
+        ////  スコア記録
+        //m_score.ScoreRecode();
+
+
+        //m_backGround.SetActive(true);
+
+        StartCoroutine(ReplayStandby());
+    }
+
+    IEnumerator ReplayStandby()
+    {
+        yield return new WaitForSeconds(m_waitTime);
 
         m_sceanManager.GameReplay();
     }
@@ -154,6 +184,8 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void GameOver()
     {
+        m_gameOvarMethod.Invoke();
+
         //  ゲームオーバー判定をtrueに
         m_gameover = true;
 
@@ -161,22 +193,19 @@ public class GameManager3 : MonoBehaviour
         m_gamePlay = true;
 
         //  スコア固定
-        m_score.Stop(true);
+        //m_score.Stop(true);
 
         //  ゲームオーバー表示
-        m_whiteBack.SetActive(true);
+        //m_backGround.SetActive(true);
+        //m_gameOverText.SetActive(true);
         Mnue();
 
 
         //  不必要なオブジェクトを消去
-        foreach (var go in GameObject.FindGameObjectsWithTag("Gimmick"))
-        {
-            Destroy(go, 0);
-        }
-        foreach (var go in GameObject.FindGameObjectsWithTag("Lotus"))
-        {
-            Destroy(go, 0);
-        }
+        //foreach (var go in GameObject.FindGameObjectsWithTag("Gimmick"))
+        //{
+        //    Destroy(go);
+        //}
         Destroy(m_frog, 0);
         //
 

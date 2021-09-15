@@ -57,23 +57,23 @@ public class FrogController : MonoBehaviour
 
     //  各種状態判定
     /// <summary>着地可否判定</summary>
-    bool contact = false;
+    bool m_contact = false;
     /// <summary>ポーズ</summary>
-    bool stop = false;
+    bool m_stop = false;
     /// <summary>プレイヤーのステータス</summary>
-    FrogState state = new FrogState();
+    FrogState m_state = new FrogState();
     //
 
     [Tooltip("ゲーム開始時のlife")]
     [SerializeField] int m_startLife = 0;
     //  static版
-    static int life = 50;
+    static int m_life = 50;
     [Tooltip("lifeの最大値")]
     [SerializeField] int m_maxLife = default;
     [Tooltip("LifeUIコンポーネント")]
     [SerializeField] LifeUI m_lifeUI = default;
 
-    public int LIfe { get { return life; } }
+    public int LIfe { get { return m_life; } }
 
 
     [Tooltip("ゲームマネージャー")]
@@ -120,7 +120,7 @@ public class FrogController : MonoBehaviour
         //
 
         //  蓮に乗っているときに行う処理
-        if (state == FrogState.Grounded && !stop)
+        if (m_state == FrogState.Grounded && !m_stop)
         {
             float bearing = Input.GetAxisRaw("Horizontal");
             if (bearing != 0)
@@ -151,13 +151,13 @@ public class FrogController : MonoBehaviour
             //
 
             //  ジャンプ
-            if (Input.GetButton("Fire1") != true && power > 0 && state == FrogState.Grounded)
+            if (Input.GetButton("Fire1") != true && power > 0 && m_state == FrogState.Grounded)
             {
                 Jump();
             }
 
 
-            if (state == FrogState.MidAir)
+            if (m_state == FrogState.MidAir)
             {
                 StartCoroutine(AirTime());
             }
@@ -178,14 +178,14 @@ public class FrogController : MonoBehaviour
         power = 0;
 
         //  着地か着水か
-        if (contact) // 着地できる範囲に着地可能なオブジェクトがあったら接地判定をtrueにし、向きを正す
+        if (m_contact) // 着地できる範囲に着地可能なオブジェクトがあったら接地判定をtrueにし、向きを正す
         {
             Debug.Log("着地着水");
             m_sr.sprite = m_sprite[0];
-            state = FrogState.Grounded;
+            m_state = FrogState.Grounded;
             transform.up = new Vector2(0, 0);
         }
-        else  //そうでなければ水没判定をtrueにする
+        else  //そうでなければ水没する
         {
             StartCoroutine(Sink());
             Debug.Log("水没true");
@@ -198,7 +198,7 @@ public class FrogController : MonoBehaviour
     void Jump()
     {
         m_sr.sprite = m_sprite[1];
-        state = FrogState.MidAir;
+        m_state = FrogState.MidAir;
         m_rb.velocity = transform.up * m_speed;
 
         //  円を消す
@@ -214,22 +214,22 @@ public class FrogController : MonoBehaviour
         //  プレイヤーが一定範囲を出たらゲームオーバー
         if (transform.position.y < fieldManager.FieldEreaUY - size)
         {
-            state = FrogState.Dead;
+            m_state = FrogState.Dead;
             StartCoroutine(Sink());
         }
         if (transform.position.y > fieldManager.FieldEreaTY + size)
         {
-            state = FrogState.Dead;
+            m_state = FrogState.Dead;
             StartCoroutine(Sink());
         }
         if (transform.position.x < fieldManager.FieldEreaLX - size)
         {
-            state = FrogState.Dead;
+            m_state = FrogState.Dead;
             StartCoroutine(Sink());
         }
         if (transform.position.x > fieldManager.FieldEreaRX + size)
         {
-            state = FrogState.Dead;
+            m_state = FrogState.Dead;
             StartCoroutine(Sink());
         }
     }
@@ -265,7 +265,7 @@ public class FrogController : MonoBehaviour
             var points = new Vector3[segments];
             for (int i = 0; i < segments; i++)
             {
-                //  線の位置を設定
+                //  線の位置を設定 円に近い多角形
                 var rad = Mathf.Deg2Rad * i;
                 float x = (float)(transform.position.x + Mathf.Sin(rad) * m_speed * power);
                 float y = (float)(transform.position.y + Mathf.Cos(rad) * m_speed * power);
@@ -296,7 +296,7 @@ public class FrogController : MonoBehaviour
         Debug.Log("水没");  
         score.Stop(true);                               //  スコアの記録を停止
         m_sr.sprite = m_sprite[2];                      //  見た目を水没してるやつに
-        state = FrogState.InWater;                      //  状態を水没に
+        m_state = FrogState.InWater;                      //  状態を水没に
         m_rb.velocity = new Vector3(0, 0, 0);
 
         yield return new WaitForSeconds(m_splash);
@@ -320,16 +320,16 @@ public class FrogController : MonoBehaviour
     void Death()
     {
         Debug.Log("ゲームオーバー");
-        state = FrogState.Dead;         //  状態を死亡に
+        m_state = FrogState.Dead;         //  状態を死亡に
 
-        if (life <= 0)
+        if (m_life <= 0)
         {
             LifeReset();
             gm.GameOver();
         }
         else
         {
-            Debug.Log(life);
+            Debug.Log(m_life);
             LifeReduce();
             gm.GameReplay();
         }
@@ -339,31 +339,33 @@ public class FrogController : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         //  空中におり、離脱したオブジェクトが蓮だった時着地不可
-        if (state == FrogState.MidAir && collision.tag == "Lotus")
+        if (m_state == FrogState.MidAir && collision.tag == "Lotus")
         {
             Debug.Log("着地不可");
-            contact = false;
+            m_contact = false;
         }
         //
     }
+
+
     private void OnTriggerStay2D(Collider2D collision) //  接地も水没もしておらず、接触しているオブジェクトが蓮だった時着地可
     {
-        if (state == FrogState.MidAir && collision.tag == "Lotus")
+        if (m_state == FrogState.MidAir && collision.tag == "Lotus")
         {
             Debug.Log("着地場所取得");
-            contact = true;
+            m_contact = true;
             getOn = collision.gameObject;   //  相手オブジェクトを取得
         }
         ///  着地可否判定部分
 
 
         //  着地処理
-        if (state == FrogState.Grounded) //  接地していたら
+        if (m_state == FrogState.Grounded) //  接地していたら
         {
             Debug.Log("接地");
             if (getOn != null)  //例外対策
             {
-                Debug.Log("同期");
+                Debug.Log("同期" + getOn);
                 //  位置と移動速度を乗っているオブジェクトと同期
                 m_rb.velocity = getOn.GetComponent<Rigidbody2D>().velocity;
                 transform.position = new Vector3(getOn.transform.position.x + 0.1f, getOn.transform.position.y, -1);
@@ -379,12 +381,12 @@ public class FrogController : MonoBehaviour
     /// </summary>
     public void Stop()
     {
-        stop = !stop;
+        m_stop = !m_stop;
     }
 
     public void Stop(bool tf)
     {
-        stop = tf;
+        m_stop = tf;
     }
 
     /// <summary>円の表示変更</summary>
@@ -426,21 +428,21 @@ public class FrogController : MonoBehaviour
     /// <summary>lifeを初期値に戻す</summary>
     public void LifeReset()
     {
-        life = m_startLife;
+        m_life = m_startLife;
     }
 
     void LifeReduce()
     {
-        life--;
+        m_life--;
         m_lifeUI.LifeUpdate();
     }
 
     public void AddLife()
     {
-        life++;
-        if(life > m_maxLife)
+        m_life++;
+        if(m_life > m_maxLife)
         {
-            life = m_maxLife;
+            m_life = m_maxLife;
         }
         m_lifeUI.LifeUpdate();
     }

@@ -210,27 +210,27 @@ public class FrogController : MonoBehaviour
     /// </summary>
     void EreaCheck()
     {
-
+        float size = (transform.localScale.x + transform.localScale.y) / 2;
         //  プレイヤーが一定範囲を出たらゲームオーバー
-        if (transform.position.y < fieldManager.FieldEreaUY - 1)
+        if (transform.position.y < fieldManager.FieldEreaUY - size)
         {
             state = FrogState.Dead;
-            Death();
+            StartCoroutine(Sink());
         }
-        if (transform.position.y > fieldManager.FieldEreaTY + 1)
+        if (transform.position.y > fieldManager.FieldEreaTY + size)
         {
             state = FrogState.Dead;
-            Death();
+            StartCoroutine(Sink());
         }
-        if (transform.position.x < fieldManager.FieldEreaLX - 1)
+        if (transform.position.x < fieldManager.FieldEreaLX - size)
         {
             state = FrogState.Dead;
-            Death();
+            StartCoroutine(Sink());
         }
-        if (transform.position.x > fieldManager.FieldEreaRX + 1)
+        if (transform.position.x > fieldManager.FieldEreaRX + size)
         {
             state = FrogState.Dead;
-            Death();
+            StartCoroutine(Sink());
         }
     }
 
@@ -293,16 +293,14 @@ public class FrogController : MonoBehaviour
     /// </summary>
     IEnumerator Sink()
     {
-        Debug.Log("水没");
-        score.Stop(true);
-        m_sr.sprite = m_sprite[2];
-        state = FrogState.InWater;
-        transform.position = new Vector3(transform.position.x, transform.position.y, -1f);
+        Debug.Log("水没");  
+        score.Stop(true);                               //  スコアの記録を停止
+        m_sr.sprite = m_sprite[2];                      //  見た目を水没してるやつに
+        state = FrogState.InWater;                      //  状態を水没に
+        m_rb.velocity = new Vector3(0, 0, 0);
 
         yield return new WaitForSeconds(m_splash);
 
-        Debug.Log("ゲームオーバー");
-        state = FrogState.Dead;
         Death();
     }
 
@@ -321,6 +319,9 @@ public class FrogController : MonoBehaviour
     /// </summary>
     void Death()
     {
+        Debug.Log("ゲームオーバー");
+        state = FrogState.Dead;         //  状態を死亡に
+
         if (life <= 0)
         {
             LifeReset();

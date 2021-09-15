@@ -39,6 +39,8 @@ public class Score : MonoBehaviour
     /// <summary>動作中のボーナススコア表示関数の数</summary>
     int m_bonusDisplayNumber = 0;
 
+
+
     private void Start()
     {
         m_text = this.GetComponent<Text>();
@@ -99,8 +101,8 @@ public class Score : MonoBehaviour
         {
             lastScore += buf;
         }
-        m_scoreText = "This turn score" + (m_score - lastScore);
-        m_scores.Add(m_score - lastScore);
+        m_scoreText = "This turn score" + (m_score - lastScore);    //  死亡時テキスト設定
+        m_scores.Add(m_score - lastScore);                          //  今世のスコアを記録
         Debug.Log(m_score);
         foreach (var buf in m_scores)
         {
@@ -148,5 +150,17 @@ public class Score : MonoBehaviour
         {
             m_bonusText = "";
         }
+    }
+
+    /// <summary>死亡時に行う処理</summary>
+    public void End()
+    {
+
+
+        //  
+
+        Stop();
+        ScoreRecode();
+
     }
 }

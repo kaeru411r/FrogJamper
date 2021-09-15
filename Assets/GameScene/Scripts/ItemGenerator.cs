@@ -207,6 +207,17 @@ public class ItemGenerator : MonoBehaviour
         return index;
     }
 
+    /// <summary>アイテムを全て消す</summary>
+    public void Destroy()
+    {
+        foreach (var list in m_instanceObjects)
+        {
+            foreach (var go in list)
+            {
+                Destroy(go, 0);
+            }
+        }
+    }
 
     enum Coping
     {

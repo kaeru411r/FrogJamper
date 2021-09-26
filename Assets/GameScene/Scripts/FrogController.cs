@@ -110,6 +110,7 @@ public class FrogController : MonoBehaviour
         m_lineRen.positionCount = segments;
         //
 
+
     }
 
     // Update is called once per frame
@@ -429,6 +430,7 @@ public class FrogController : MonoBehaviour
     public void LifeReset()
     {
         m_life = m_startLife;
+        m_lifeUI.LifeUpdate();
     }
 
     void LifeReduce()

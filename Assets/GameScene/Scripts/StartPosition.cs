@@ -19,10 +19,15 @@ public class StartPosition : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(Break());
         transform.position = new Vector3(m_fieldManager.Position.x, m_fieldManager.FieldEreaUY + 1);
         m_frogController.transform.position = new Vector3(transform.position.x, transform.position.y, -1);
     }
+
+    public void Timer()
+    {
+        StartCoroutine(Break());
+    }
+
     private void OnTriggerExit2D(Collider2D collision)  //プレイヤーが離れたら消去
     {
         if (collision.tag == "Frog")

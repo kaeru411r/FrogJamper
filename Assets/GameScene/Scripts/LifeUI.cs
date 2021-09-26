@@ -36,7 +36,6 @@ public class LifeUI : MonoBehaviour
 
         m_range = m_lifes.Count;
 
-        LifeUpdate();
     }
 
     /// <summary>lifeの表示を更新</summary>
@@ -66,8 +65,10 @@ public class LifeUI : MonoBehaviour
         //  lifeの左側(大きい方)を変更
         for (int i = 0; i < life % m_range; i++)
         {
-            if(index >=4)
-            Debug.LogError(life + "" + m_range);
+            if (index >= 4) //  エラー報告
+            {
+                Debug.LogError(life + "" + m_range);
+            }
             m_images[i].material = m_material[index];
         }
         //  lifeの右側(小さい方)を変更

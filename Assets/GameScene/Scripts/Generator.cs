@@ -57,13 +57,7 @@ public class Generator : MonoBehaviour
 
     private void Start()
     {
-        m_ereaRX = m_fieldManager.FieldEreaRX - 1;
-        m_ereaLX = m_fieldManager.FieldEreaLX + 1;
-        m_ereaTY = m_fieldManager.FieldEreaTY - 1;
-        m_centerY = m_fieldManager.Position.y;
-
         SetUp();
-
     }
     // Update is called once per frame
     void Update()
@@ -129,6 +123,13 @@ public class Generator : MonoBehaviour
     /// </summary>
     public void SetUp()
     {
+        m_ereaRX = m_fieldManager.FieldEreaRX - 1;
+        m_ereaLX = m_fieldManager.FieldEreaLX + 1;
+        m_ereaTY = m_fieldManager.FieldEreaTY - 1;
+        m_centerY = m_fieldManager.Position.y;
+
+        Destroy();
+
         for (int i = 0; i < Random.Range(m_lowerLimit, m_upperLimit); i++)  //Limitで指定された数だけgenObを生成
         {
             UpeerHlafGenerate();

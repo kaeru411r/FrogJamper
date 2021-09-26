@@ -148,6 +148,7 @@ public class GameManager3 : MonoBehaviour
         StartCoroutine(ReplayStandby());
     }
 
+    /// <summary>一定時間後にリプレイ</summary>
     IEnumerator ReplayStandby()
     {
         yield return new WaitForSeconds(m_waitTime);
@@ -238,7 +239,8 @@ public class GameManager3 : MonoBehaviour
         m_startWait = false;
     }
 
-
+    /// <summary>現在のプレイ状況をint型で返す</summary>
+    /// <returns>0 = Start, 1 = Play, 2 = Replay, 3 = GameOver, 4 = Clear</returns>
     public int StateGet()
     {
         return (int)m_state;

@@ -168,8 +168,9 @@ public class FrogController : MonoBehaviour
 
 
     }
-    //power秒間飛ぶ
-    //power秒間経つと処理が開始される。
+
+    /// <summary>power秒間飛ぶ
+    /// power秒間経つと処理が開始される。</summary>
     IEnumerator AirTime()
     {
         yield return new WaitForSeconds(power); //  power秒間待つ

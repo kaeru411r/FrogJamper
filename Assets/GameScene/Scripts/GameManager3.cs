@@ -61,7 +61,9 @@ public class GameManager3 : MonoBehaviour
     [SerializeField] float m_waitTime;
 
     [Tooltip("スタート時に待つ時間")]
-    [SerializeField] float m_startWaitTime;
+    [SerializeField] float[] m_startWaitTime;
+    [Tooltip("スタート時に表示する文字列")]
+    [SerializeField] string[] m_startWaitString;
 
     [Tooltip("スコアボード")]
     [SerializeField] Score m_score = default;
@@ -217,26 +219,34 @@ public class GameManager3 : MonoBehaviour
     /// <summary>ゲーム開始時に呼ぶ</summary>
     public void SetUp()
     {
-        StartCoroutine(Starter());
-    }
-
-    /// <summary>SetUpの実処理部</summary>
-    IEnumerator Starter()
-    {
         Time.timeScale = 1;
         m_backGround.SetActive(true);
         m_state = State.Play;
         m_startWait = true;
-        m_EndText.text = "Ready";
 
-        yield return new WaitForSeconds(m_startWaitTime / 3 * 2);
+        StartCoroutine(Starter(m_startWaitTime[0], 0));
+    }
 
-        m_EndText.text = "Go!!";
+    /// <summary>SetUpの実処理部</summary>
+    IEnumerator Starter(float time, int i)
+    {
+        if(m_startWaitString.Length >= i + 1)
+        {
+            m_EndText.text = m_startWaitString[i];
+        }
 
-        yield return new WaitForSeconds(m_startWaitTime / 3);
+        yield return new WaitForSeconds(m_startWaitTime[i]);
 
-        m_gameStartMethod.Invoke();
-        m_startWait = false;
+        if (m_startWaitTime.Length <= i + 1)
+        {
+            m_gameStartMethod.Invoke();
+            m_startWait = false;
+        }
+        else
+        {
+            i++;
+            StartCoroutine(Starter(m_startWaitTime[i], i));
+        }
     }
 
     /// <summary>現在のプレイ状況をint型で返す</summary>

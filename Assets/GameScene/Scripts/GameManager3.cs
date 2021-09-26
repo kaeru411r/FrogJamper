@@ -49,13 +49,19 @@ public class GameManager3 : MonoBehaviour
 
 
     [Tooltip("ゲームオーバー表示")]
-    [SerializeField] GameObject m_gameOverText = default;
+    [SerializeField] Text m_EndText = default;
 
     [Tooltip("ゲームオーバー時に呼ぶセット")]
     [SerializeField] UnityEvent m_gameOvarMethod;
 
+    [Tooltip("スタート時に呼ぶセット")]
+    [SerializeField] UnityEvent m_gameStartMethod;
+
     [Tooltip("死亡時の待機時間")]
     [SerializeField] float m_waitTime;
+
+    [Tooltip("スタート時に待つ時間")]
+    [SerializeField] float m_startWaitTime;
 
     [Tooltip("スコアボード")]
     [SerializeField] Score m_score = default;
@@ -69,7 +75,7 @@ public class GameManager3 : MonoBehaviour
     /// <summary>このシーンの名前</summary>
     string m_thisSceanName = default;
 
-
+    bool m_startWait = false;
 
 
 
@@ -142,6 +148,7 @@ public class GameManager3 : MonoBehaviour
         StartCoroutine(ReplayStandby());
     }
 
+    /// <summary>一定時間後にリプレイ</summary>
     IEnumerator ReplayStandby()
     {
         yield return new WaitForSeconds(m_waitTime);
@@ -207,15 +214,33 @@ public class GameManager3 : MonoBehaviour
         Mnue();
     }
 
+    /// <summary>ゲーム開始時に呼ぶ</summary>
     public void SetUp()
     {
-        m_state = State.Play;
-        Time.timeScale = 1;
-        m_score.ScoreReset();
-        m_frogController.LifeReset();
+        StartCoroutine(Starter());
     }
 
+    /// <summary>SetUpの実処理部</summary>
+    IEnumerator Starter()
+    {
+        Time.timeScale = 1;
+        m_backGround.SetActive(true);
+        m_state = State.Play;
+        m_startWait = true;
+        m_EndText.text = "Ready";
 
+        yield return new WaitForSeconds(m_startWaitTime / 3 * 2);
+
+        m_EndText.text = "Go!!";
+
+        yield return new WaitForSeconds(m_startWaitTime / 3);
+
+        m_gameStartMethod.Invoke();
+        m_startWait = false;
+    }
+
+    /// <summary>現在のプレイ状況をint型で返す</summary>
+    /// <returns>0 = Start, 1 = Play, 2 = Replay, 3 = GameOver, 4 = Clear</returns>
     public int StateGet()
     {
         return (int)m_state;

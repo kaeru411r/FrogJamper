@@ -110,6 +110,7 @@ public class FrogController : MonoBehaviour
         m_lineRen.positionCount = segments;
         //
 
+
     }
 
     // Update is called once per frame
@@ -167,8 +168,9 @@ public class FrogController : MonoBehaviour
 
 
     }
-    //power秒間飛ぶ
-    //power秒間経つと処理が開始される。
+
+    /// <summary>power秒間飛ぶ
+    /// power秒間経つと処理が開始される。</summary>
     IEnumerator AirTime()
     {
         yield return new WaitForSeconds(power); //  power秒間待つ
@@ -429,6 +431,7 @@ public class FrogController : MonoBehaviour
     public void LifeReset()
     {
         m_life = m_startLife;
+        m_lifeUI.LifeUpdate();
     }
 
     void LifeReduce()

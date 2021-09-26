@@ -60,17 +60,10 @@ public class ItemGenerator : MonoBehaviour
 
     private void Start()
     {
-        m_ereaRX = m_fieldManager.FieldEreaRX - 1;
-        m_ereaLX = m_fieldManager.FieldEreaLX + 1;
-        m_ereaTY = m_fieldManager.FieldEreaTY - 1;
-        m_ereaUY = m_fieldManager.FieldEreaUY + 1;
-
-        for(int i = 0; i < m_genOb.Count; i++)  //  オブジェクトの種類の数管理用リストを拡張
-        {
-            m_instanceObjects.Add(new List<GameObject>());
-            m_states.Add(State.Nomal);
-        }
+        SetUp();
     }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -83,6 +76,24 @@ public class ItemGenerator : MonoBehaviour
             InstanseNumberCheck();
             Lottery(index);
             m_lastLottery = 0;
+        }
+
+    }
+
+    /// <summary>プレイ開始時に呼び出し</summary>
+    public void SetUp()
+    {
+        Destroy();
+
+        m_ereaRX = m_fieldManager.FieldEreaRX - 1;
+        m_ereaLX = m_fieldManager.FieldEreaLX + 1;
+        m_ereaTY = m_fieldManager.FieldEreaTY - 1;
+        m_ereaUY = m_fieldManager.FieldEreaUY + 1;
+
+        for (int i = 0; i < m_genOb.Count; i++)  //  オブジェクトの種類の数管理用リストを拡張
+        {
+            m_instanceObjects.Add(new List<GameObject>());
+            m_states.Add(State.Nomal);
         }
 
     }

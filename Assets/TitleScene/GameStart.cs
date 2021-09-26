@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class GameStart : MonoBehaviour
 {
 
+
     //  メニュー関連
     [Tooltip("メニュー")]
     [SerializeField] GameObject m_menu = default;
@@ -28,7 +29,7 @@ public class GameStart : MonoBehaviour
     /// <summary>ゲームを開始する</summary>
     private void Start()
     {
-        //DontDestroyOnLoad(this);
+        DontDestroyOnLoad(this);
     }
 
     private void Update()
@@ -61,6 +62,7 @@ public class GameStart : MonoBehaviour
 
         GameObject.Find("Frog").GetComponent<FrogController>().Circle(m_circle);
         GameObject.Find("GameManager").GetComponent<GameManager3>().SetUp();
+        Destroy(gameObject, 0);
     }
 
     /// <summary>ゲームを終了</summary>

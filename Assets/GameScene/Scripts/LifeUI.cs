@@ -36,6 +36,8 @@ public class LifeUI : MonoBehaviour
 
         m_range = m_lifes.Count;
 
+        LifeUpdate();
+
     }
 
     /// <summary>lifeの表示を更新</summary>

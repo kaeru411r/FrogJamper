@@ -150,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_speedUpperLimit: 0
   m_speedLowerLimit: 0
+  m_TimeLimit: 0
   m_useEvent:
     m_PersistentCalls:
       m_Calls:

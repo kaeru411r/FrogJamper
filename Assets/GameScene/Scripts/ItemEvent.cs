@@ -11,6 +11,8 @@ public class ItemEvent : MonoBehaviour
     [SerializeField] float m_speedUpperLimit = default;
     [Tooltip("アイテムの流れる速さの下限")]
     [SerializeField] float m_speedLowerLimit = default;
+    [Tooltip("アイテムが存在していられる時間　0以下に設定することで無効になる")]
+    [SerializeField] float m_TimeLimit;
 
     [SerializeField] UnityEvent m_useEvent;
 
@@ -31,6 +33,19 @@ public class ItemEvent : MonoBehaviour
         //  オブジェクトの回転を無効化
         rb.freezeRotation = true;
 
+    }
+
+    private void Update()
+    {
+        if(m_TimeLimit <= 0) { }
+        else
+        {
+            m_TimeLimit -= Time.deltaTime;
+            if (m_TimeLimit <= 0)
+            {
+                Destroy();
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)

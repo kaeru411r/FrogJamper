@@ -53,11 +53,18 @@ public class ItemEvent : MonoBehaviour
         Use();
     }
 
+    /// <summary>
+    /// アイテム使用
+    /// </summary>
     void Use()
     {
         m_useEvent.Invoke();
         Destroy();
     }
+
+    /// <summary>
+    /// アイテム消すときに呼ぶ
+    /// </summary>
     void Destroy()
     {
         Destroy(gameObject, 0);

@@ -65,4 +65,12 @@ public class ItemEvent : MonoBehaviour
     {
         GameObject.Find("ScoreBord").GetComponent<Score>().AddScore(value); //  スコアをvalue分追加
     }
+
+    /// <summary>
+    /// プレイヤーが沈む
+    /// </summary>
+    public void Crash()
+    {
+        GameObject.Find("Frog").GetComponent<FrogController>().Crash(); //  溺れる
+    }
 }

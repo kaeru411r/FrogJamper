@@ -449,6 +449,16 @@ public class FrogController : MonoBehaviour
         }
         m_lifeUI.LifeUpdate();
     }
+
+    public void AddLife(int value)
+    {
+        m_life += value;
+        if (m_life > m_maxLife)
+        {
+            m_life = m_maxLife;
+        }
+        m_lifeUI.LifeUpdate();
+    }
 }
 
 

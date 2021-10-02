@@ -176,12 +176,14 @@ public class GameManager3 : MonoBehaviour
 
 
         Mnue();
+        m_close.SetActive(false);
 
         Destroy(m_frog, 0);
         //
 
     }
 
+    /// <summary>ゲームクリア時に呼び出す</summary>
     public void GameClear()
     {
         //  状態をクリアに
@@ -190,6 +192,7 @@ public class GameManager3 : MonoBehaviour
         m_gameOvarMethod.Invoke();
 
         Mnue();
+        m_close.SetActive(false);
 
         Destroy(m_frog, 0);
 

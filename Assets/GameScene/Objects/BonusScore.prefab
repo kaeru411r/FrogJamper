@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6696285458095850121}
   - component: {fileID: 9001453879234878566}
   - component: {fileID: 7109794886180698499}
+  - component: {fileID: 956900802109000962}
   m_Layer: 0
   m_Name: BonusScore
   m_TagString: Gimmick
@@ -134,7 +135,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8837705773322920439}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 571849cf44eb06e48b07d009a9273fc0, type: 3}
   m_Name: 
@@ -150,3 +151,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8837705773322920439}
   m_CullTransparentMesh: 0
+--- !u!114 &956900802109000962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837705773322920439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3978472f18a1cee4c9e36a72295c7035, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_speedUpperLimit: 0
+  m_speedLowerLimit: 0
+  m_useEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 956900802109000962}
+        m_MethodName: AddScore
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 100
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

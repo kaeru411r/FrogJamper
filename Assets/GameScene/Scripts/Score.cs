@@ -135,6 +135,15 @@ public class Score : MonoBehaviour
     }
 
     /// <summary>
+    /// スコアボーナスを獲得する
+    /// </summary>
+    public void AddScore(int value)
+    {
+        m_score += value;
+        StartCoroutine(BonusDisplay());
+    }
+
+    /// <summary>
     /// スコアボーナスを表示
     /// 一フレームに呼ばれた回数分だけボーナスの表示数値が倍増していく
     /// </summary>

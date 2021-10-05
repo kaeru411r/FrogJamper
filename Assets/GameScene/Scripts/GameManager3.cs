@@ -50,6 +50,8 @@ public class GameManager3 : MonoBehaviour
 
     [Tooltip("ゲームオーバー表示")]
     [SerializeField] Text m_endText = default;
+    [Tooltip("ゲーム開始時表示")]
+    [SerializeField] Text m_startText;
 
     //  ギミック群
     [Tooltip("蓮生成コンポーネント")]
@@ -74,6 +76,8 @@ public class GameManager3 : MonoBehaviour
     [SerializeField] float[] m_startWaitTime;
     [Tooltip("スタート時に表示する文字列")]
     [SerializeField] string[] m_startWaitString;
+    [Tooltip("スタート時に表示する画面")]
+    [SerializeField] GameObject m_startDisplay;
 
     [Tooltip("スコアボード")]
     [SerializeField] Score m_score = default;
@@ -253,7 +257,7 @@ public class GameManager3 : MonoBehaviour
     public void SetUp()
     {
         Time.timeScale = 1;
-        m_backGround.SetActive(true);
+        m_startDisplay.SetActive(true);
         m_state = State.Play;
         m_startWait = true;
 
@@ -265,7 +269,7 @@ public class GameManager3 : MonoBehaviour
     {
         if(m_startWaitString.Length >= i + 1)
         {
-            m_endText.text = m_startWaitString[i];
+            m_startText.text = m_startWaitString[i];
         }
 
         yield return new WaitForSeconds(m_startWaitTime[i]);
@@ -275,11 +279,11 @@ public class GameManager3 : MonoBehaviour
             m_score.ScoreReset();
             m_frogController.LifeReset();
             m_backGround.SetActive(false);
-            m_endText.text = "";
             m_itemGenerator.SetUp();
             m_lotusGenerator.SetUp();
             m_startLotus.Timer();
             m_startWait = false;
+            m_startDisplay.SetActive(false);
         }
         else
         {

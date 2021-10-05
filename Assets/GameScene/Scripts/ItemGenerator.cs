@@ -22,6 +22,9 @@ public class ItemGenerator : MonoBehaviour
     [Tooltip("各アイテムの生成数上限")]
     [SerializeField] int[] m_maxInstanceNumbers = default;
 
+    /// <summary>オブジェクトを生成するか否か</summary>
+    bool m_play = false;
+
 
 
     //  m_erea m_gemObの生成範囲
@@ -58,24 +61,27 @@ public class ItemGenerator : MonoBehaviour
 
 
 
-    private void Start()
-    {
-        SetUp();
-    }
+    //private void Start()
+    //{
+    //    SetUp();
+    //}
 
 
     // Update is called once per frame
     void Update()
     {
-        m_lastLottery += Time.deltaTime;
-
-        if (m_lastLottery > m_lotteryInterval)    //  一定間隔おきに抽選を行う
+        if (m_play) //生成機能がオンの時のみ機能
         {
-            int index = ItemLottery();
-            NullCheck();
-            InstanseNumberCheck();
-            Lottery(index);
-            m_lastLottery = 0;
+            m_lastLottery += Time.deltaTime;
+
+            if (m_lastLottery > m_lotteryInterval)    //  一定間隔おきに抽選を行う
+            {
+                int index = ItemLottery();
+                NullCheck();
+                InstanseNumberCheck();
+                Lottery(index);
+                m_lastLottery = 0;
+            }
         }
 
     }
@@ -83,7 +89,7 @@ public class ItemGenerator : MonoBehaviour
     /// <summary>プレイ開始時に呼び出し</summary>
     public void SetUp()
     {
-        Destroy();
+        Active(true);
 
         m_ereaRX = m_fieldManager.FieldEreaRX - 1;
         m_ereaLX = m_fieldManager.FieldEreaLX + 1;
@@ -228,6 +234,13 @@ public class ItemGenerator : MonoBehaviour
                 Destroy(go, 0);
             }
         }
+    }
+
+    /// <summary>生成機能のオンオフ切り替え</summary>
+    /// <param name="value"></param>
+    public void Active(bool value)
+    {
+        m_play = value;
     }
 
     enum Coping

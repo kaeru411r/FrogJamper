@@ -51,7 +51,7 @@ public class GameManager3 : MonoBehaviour
     [Tooltip("ゲームオーバー表示")]
     [SerializeField] Text m_endText = default;
 
-
+    //  ギミック群
     [Tooltip("蓮生成コンポーネント")]
     [SerializeField] Generator m_lotusGenerator;
     [Tooltip("アイテム生成コンポーネント")]
@@ -106,7 +106,7 @@ public class GameManager3 : MonoBehaviour
         }
         else
         {
-            m_state = State.Play;
+            PlayStart();
         }
 
 
@@ -286,6 +286,14 @@ public class GameManager3 : MonoBehaviour
             i++;
             StartCoroutine(Starter(m_startWaitTime[i], i));
         }
+    }
+
+    /// <summary>二機目以降のゲーム開始時に呼ぶ</summary>
+    void PlayStart()
+    {
+        m_state = State.Play;
+        m_itemGenerator.SetUp();
+        m_lotusGenerator.SetUp();
     }
 
     /// <summary>現在のプレイ状況をint型で返す</summary>

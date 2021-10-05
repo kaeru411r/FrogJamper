@@ -44,6 +44,8 @@ public class Score : MonoBehaviour
     [Tooltip("クリアに必要なスコア")]
     [SerializeField] int m_goal;
 
+    public int Goal { get { return m_goal; } }
+
     [Tooltip("ゲームマネージャー")]
     [SerializeField] GameManager3 m_gameManager;
 

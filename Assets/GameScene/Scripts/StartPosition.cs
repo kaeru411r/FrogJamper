@@ -23,6 +23,9 @@ public class StartPosition : MonoBehaviour
         m_frogController.transform.position = new Vector3(transform.position.x, transform.position.y, -1);
     }
 
+    /// <summary>
+    /// 消滅までのカウントダウンを開始する
+    /// </summary>
     public void Timer()
     {
         StartCoroutine(Break());

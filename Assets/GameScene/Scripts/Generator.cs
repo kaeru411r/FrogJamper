@@ -51,40 +51,48 @@ public class Generator : MonoBehaviour
     /// <summary>現在存在する蓮の葉</summary>
     List<GameObject> m_instanceObjects = new List<GameObject>();
 
+    /// <summary>オブジェクトを生成するか否か</summary>
+    bool m_play = false;
 
 
 
 
-    private void Start()
-    {
-        SetUp();
-    }
+
+    //private void Start()
+    //{
+    //    SetUp();
+    //}
     // Update is called once per frame
     void Update()
     {
-        lastLottery += Time.deltaTime;
         LostObjectCheck();
-        if (m_instanceObjects.Count > 0)
+
+        if (m_play) //  生成が許可されている時のみ機能させる
         {
-            bool beingness = false;
-            foreach (var ob in m_instanceObjects)   //  一定エリアより上に蓮が無くなったら湧かす
+            lastLottery += Time.deltaTime;
+
+            if (m_instanceObjects.Count > 0)
             {
-                if (ob.transform.position.y > m_fieldManager.transform.position.y - m_passportErea)
+                bool beingness = false;
+                foreach (var ob in m_instanceObjects)   //  一定エリアより上に蓮が無くなったら湧かす
                 {
-                    beingness = true;
-                    break;
+                    if (ob.transform.position.y > m_fieldManager.transform.position.y - m_passportErea)
+                    {
+                        beingness = true;
+                        break;
+                    }
+                }
+                if (!beingness)
+                {
+                    TopGenerate();
                 }
             }
-            if (!beingness)
-            {
-                TopGenerate();
-            }
-        }
 
-        if (lastLottery > m_lotteryInterval && m_instanceObjects.Count < m_upperLimit)    //  一定間隔おきで一定個数以下の時抽選
-        {
-            Lottery();
-            lastLottery = 0;
+            if (lastLottery > m_lotteryInterval && m_instanceObjects.Count < m_upperLimit)    //  一定間隔おきで一定個数以下の時抽選
+            {
+                Lottery();
+                lastLottery = 0;
+            }
         }
 
     }
@@ -128,7 +136,7 @@ public class Generator : MonoBehaviour
         m_ereaTY = m_fieldManager.FieldEreaTY - 1;
         m_centerY = m_fieldManager.Position.y;
 
-        Destroy();
+        Active(true);
 
         for (int i = 0; i < Random.Range(m_lowerLimit, m_upperLimit); i++)  //Limitで指定された数だけgenObを生成
         {
@@ -148,6 +156,13 @@ public class Generator : MonoBehaviour
                 i--;
             }
         }
+    }
+
+    /// <summary>生成機能のオンオフ切り替え</summary>
+    /// <param name="value"></param>
+    public void Active(bool value)
+    {
+        m_play = value;
     }
 
     /// <summary>上半分のどこかにランダムで生成</summary>

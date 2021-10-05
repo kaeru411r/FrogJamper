@@ -49,13 +49,23 @@ public class GameManager3 : MonoBehaviour
 
 
     [Tooltip("ゲームオーバー表示")]
-    [SerializeField] Text m_EndText = default;
+    [SerializeField] Text m_endText = default;
 
-    [Tooltip("ゲームオーバー時に呼ぶセット")]
-    [SerializeField] UnityEvent m_gameOvarMethod;
 
-    [Tooltip("スタート時に呼ぶセット")]
-    [SerializeField] UnityEvent m_gameStartMethod;
+    [Tooltip("蓮生成コンポーネント")]
+    [SerializeField] Generator m_lotusGenerator;
+    [Tooltip("アイテム生成コンポーネント")]
+    [SerializeField] ItemGenerator m_itemGenerator;
+    [Tooltip("EndTextコントロールクラス")]
+    [SerializeField] EndText m_endTextController;
+    [Tooltip("ゲーム進行用オブジェクト群")]
+    [SerializeField] GameObject m_gimmicks;
+    [Tooltip("ゲーム進行用UI群")]
+    [SerializeField] GameObject m_uIs;
+    [Tooltip("初めに乗ってる蓮")]
+    [SerializeField] StartPosition m_startLotus;
+
+
 
     [Tooltip("死亡時の待機時間")]
     [SerializeField] float m_waitTime;
@@ -143,7 +153,13 @@ public class GameManager3 : MonoBehaviour
         //  状態をリプレイ待機に
         m_state = State.Replay;
 
-        m_gameOvarMethod.Invoke();
+        m_lotusGenerator.Destroy();
+        m_itemGenerator.Destroy();
+        m_score.End();
+        m_endTextController.Display();
+        m_backGround.SetActive(true);
+        m_gimmicks.SetActive(false);
+        m_uIs.SetActive(false);
 
         Destroy(m_frog, 0);
 
@@ -169,7 +185,13 @@ public class GameManager3 : MonoBehaviour
         //  状態をゲームオーバーに
         m_state = State.GameOvar;
 
-        m_gameOvarMethod.Invoke();
+        m_lotusGenerator.Destroy();
+        m_itemGenerator.Destroy();
+        m_score.End();
+        m_endTextController.Display();
+        m_backGround.SetActive(true);
+        m_gimmicks.SetActive(false);
+        m_uIs.SetActive(false);
 
         //  ゲームオーバー判定をtrueに
         m_gameover = true;
@@ -189,7 +211,15 @@ public class GameManager3 : MonoBehaviour
         //  状態をクリアに
         m_state = State.Clear;
 
-        m_gameOvarMethod.Invoke();
+        m_lotusGenerator.Destroy();
+        m_itemGenerator.Destroy();
+        m_score.End();
+        m_endTextController.Display();
+        m_backGround.SetActive(true);
+        m_gimmicks.SetActive(false);
+        m_uIs.SetActive(false);
+
+
 
         Mnue();
         m_close.SetActive(false);
@@ -235,14 +265,20 @@ public class GameManager3 : MonoBehaviour
     {
         if(m_startWaitString.Length >= i + 1)
         {
-            m_EndText.text = m_startWaitString[i];
+            m_endText.text = m_startWaitString[i];
         }
 
         yield return new WaitForSeconds(m_startWaitTime[i]);
 
         if (m_startWaitTime.Length <= i + 1)
         {
-            m_gameStartMethod.Invoke();
+            m_score.ScoreReset();
+            m_frogController.LifeReset();
+            m_backGround.SetActive(false);
+            m_endText.text = "";
+            m_itemGenerator.SetUp();
+            m_lotusGenerator.SetUp();
+            m_startLotus.Timer();
             m_startWait = false;
         }
         else

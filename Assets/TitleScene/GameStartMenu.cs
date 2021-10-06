@@ -26,7 +26,7 @@ public class GameStartMenu : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey("Circle") || PlayerPrefs.GetInt("Circle") == 0)
+        if (!PlayerPrefs.HasKey("Circle") || PlayerPrefs.GetInt("Circle") == 1)
         {
             Circle(true);
         }

@@ -20,10 +20,12 @@ public class SceanManager : MonoBehaviour
     {
         //DontDestroyOnLoad(this);
 
+        PlayerPrefs.Save();
         m_thisSceanName = SceneManager.GetActiveScene().name;
     }
     public void ReStart(string nowScean)
     {
+        PlayerPrefs.Save();
         SceneManager.LoadScene(nowScean);
     }
     /// <summary>
@@ -33,6 +35,7 @@ public class SceanManager : MonoBehaviour
     /// </summary>
     public void GameReplay()
     {
+        PlayerPrefs.Save();
         SceneManager.LoadScene(m_thisSceanName);
     }
 
@@ -41,12 +44,14 @@ public class SceanManager : MonoBehaviour
     /// </summary>
     public void Exit()
     {
-        SceneManager.LoadScene(m_titleScene.name);
+        PlayerPrefs.Save();
+        SceneManager.LoadScene(m_titleScene.handle);
         Destroy(gameObject, 0);
     }
 
     public void ReStart()
     {
+        PlayerPrefs.Save();
         SceneManager.LoadScene(m_thisSceanName);
         //m_gameManager.SetUp();
     }

@@ -7,6 +7,7 @@ public class SceneSelecter : MonoBehaviour
 {
     public void SceneChange(int value)
     {
+        PlayerPrefs.Save();
         SceneManager.LoadScene(value);
     }
 }

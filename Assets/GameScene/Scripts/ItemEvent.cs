@@ -24,6 +24,8 @@ public class ItemEvent : MonoBehaviour
         //  オブジェクトの物理的挙動をなくす
         rb.bodyType = RigidbodyType2D.Kinematic;
 
+        GetComponent<CircleCollider2D>().isTrigger = true;
+
         //オブジェクトの移動速度を決定
         var speed = Random.Range(m_speedLowerLimit, m_speedUpperLimit);
 
@@ -48,10 +50,14 @@ public class ItemEvent : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Use();
+        if (collision.gameObject.tag == "Frog")
+        {
+            Use();
+        }
     }
+
 
     /// <summary>
     /// アイテム使用
@@ -94,5 +100,12 @@ public class ItemEvent : MonoBehaviour
     public void Crash()
     {
         GameObject.Find("Frog").GetComponent<FrogController>().Crash(); //  溺れる
+    }
+
+    /// <summary>スコアの獲得量を現在のvalue倍にする</summary>
+    /// <param name="value"></param>
+    public void ScoreMultiply(float value)
+    {
+        GameObject.Find("ScoreBord").GetComponent<Score>().MultiplyCoefficient(value); //  スコアをvalue分追加
     }
 }

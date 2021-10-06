@@ -23,6 +23,9 @@ public class GameStartMenu : MonoBehaviour
     [Tooltip("円切り替えボタンのテキスト")]
     [SerializeField] Text m_circleButton = default;
 
+    [Tooltip("操作説明")]
+    [SerializeField] GameObject m_manual;
+
 
     private void Start()
     {
@@ -43,6 +46,7 @@ public class GameStartMenu : MonoBehaviour
         {
             m_menu.SetActive(false);
             m_openMenu = false;
+            m_manual.SetActive(false);
         }
         else if (Input.GetButtonDown("Cancel") && !m_openMenu) //  メニュー開く
         {
@@ -66,6 +70,7 @@ public class GameStartMenu : MonoBehaviour
         {
             m_menu.SetActive(false);
             m_openMenu = false;
+            m_manual.SetActive(false);
         }
         else
         {
@@ -81,6 +86,7 @@ public class GameStartMenu : MonoBehaviour
         {
             m_menu.SetActive(false);
             m_openMenu = false;
+            m_manual.SetActive(false);
         }
         else
         {

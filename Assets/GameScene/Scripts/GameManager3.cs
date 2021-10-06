@@ -34,6 +34,14 @@ public class GameManager3 : MonoBehaviour
     [SerializeField] GameObject m_exit;
     [Tooltip("閉じるボタン")]
     [SerializeField] GameObject m_close;
+    [Tooltip("クリア時に次のシーンへ飛ぶためのボタン")]
+    [SerializeField] GameObject m_clearButton;
+    [Tooltip("クリア時に次のシーンへ飛ぶためのボタンのテキスト")]
+    [SerializeField] string m_clearText;
+    [Tooltip("操作説明ボタン")]
+    [SerializeField] GameObject m_manualButton;
+    [Tooltip("操作説明")]
+    [SerializeField] GameObject m_manual;
     /// <summary>メニューを開いているか</summary>
     bool m_openMenu = false;
     //
@@ -104,7 +112,7 @@ public class GameManager3 : MonoBehaviour
 
 
         //ゲーム開始時の処理
-        if (m_state == State.Start)
+        if (m_state == State.Start || m_state == State.Clear)
         {
             SetUp();
         }
@@ -134,6 +142,7 @@ public class GameManager3 : MonoBehaviour
         if (m_openMenu)
         {
             Time.timeScale = 1;
+            m_manual.SetActive(false);
         }
         else
         {
@@ -144,6 +153,7 @@ public class GameManager3 : MonoBehaviour
         m_restart.SetActive(m_openMenu);
         m_exit.SetActive(m_openMenu);
         m_close.SetActive(m_openMenu);
+        m_manualButton.SetActive(m_openMenu);
         m_frogController.Stop();
     }
 
@@ -206,6 +216,8 @@ public class GameManager3 : MonoBehaviour
 
         Destroy(m_frog, 0);
         //
+        m_score.ScoreReset();
+        m_frogController.LifeReset();
 
     }
 
@@ -227,6 +239,12 @@ public class GameManager3 : MonoBehaviour
 
         Mnue();
         m_close.SetActive(false);
+        m_clearButton.SetActive(true);
+        m_clearButton.transform.GetChild(0).gameObject.GetComponent<Text>().text = m_clearText;
+        m_score.ScoreReset();
+        m_frogController.LifeReset();
+
+
 
         Destroy(m_frog, 0);
 
@@ -263,7 +281,14 @@ public class GameManager3 : MonoBehaviour
         m_state = State.Play;
         m_startWait = true;
 
-        StartCoroutine(Starter(m_startWaitTime[0], 0));
+        if (m_startWaitTime.Length <= 0)
+        {
+            StartCoroutine(Starter(0, 0));
+        }
+        else
+        {
+            StartCoroutine(Starter(m_startWaitTime[0], 0));
+        }
     }
 
     /// <summary>SetUpの実処理部</summary>
@@ -274,7 +299,10 @@ public class GameManager3 : MonoBehaviour
             m_startText.text = m_startWaitString[i];
         }
 
-        yield return new WaitForSeconds(m_startWaitTime[i]);
+        if (m_startWaitTime.Length > 0)
+        {
+            yield return new WaitForSeconds(m_startWaitTime[i]);
+        }
 
         if (m_startWaitTime.Length <= i + 1)
         {
@@ -286,6 +314,7 @@ public class GameManager3 : MonoBehaviour
             m_startLotus.Timer();
             m_startWait = false;
             m_startDisplay.SetActive(false);
+            m_score.Stop(false);
         }
         else
         {
@@ -300,6 +329,7 @@ public class GameManager3 : MonoBehaviour
         m_state = State.Play;
         m_itemGenerator.SetUp();
         m_lotusGenerator.SetUp();
+        m_score.Stop(false);
     }
 
     /// <summary>現在のプレイ状況をint型で返す</summary>

@@ -46,13 +46,17 @@ public class SceanManager : MonoBehaviour
     {
         PlayerPrefs.Save();
         SceneManager.LoadScene(m_titleScene.handle);
-        Destroy(gameObject, 0);
     }
 
     public void ReStart()
     {
         PlayerPrefs.Save();
         SceneManager.LoadScene(m_thisSceanName);
-        //m_gameManager.SetUp();
+    }
+
+    public void SceneChange(int value)
+    {
+        PlayerPrefs.Save();
+        SceneManager.LoadScene(value);
     }
 }

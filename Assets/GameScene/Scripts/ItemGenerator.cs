@@ -45,8 +45,6 @@ public class ItemGenerator : MonoBehaviour
     [Tooltip("抽選間隔")]
     [SerializeField] float m_lotteryInterval = default;
 
-    [Tooltip("生成数上限")]
-    [SerializeField] int m_maxInstanceNumber = default;
 
     [Tooltip("生成数上限時の対応")]
     [SerializeField] Coping m_coping = default;

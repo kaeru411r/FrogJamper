@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 3322316695611582979}
   - component: {fileID: 2509152006374577259}
   - component: {fileID: 6696285458095850121}
-  - component: {fileID: 9001453879234878566}
-  - component: {fileID: 7109794886180698499}
   - component: {fileID: 956900802109000962}
   m_Layer: 0
   m_Name: BonusScore
@@ -128,29 +126,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &9001453879234878566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8837705773322920439}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 571849cf44eb06e48b07d009a9273fc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_speedUpperLimit: 0
-  m_speedLowerLimit: 0
-  m_factor: 1
---- !u!222 &7109794886180698499
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8837705773322920439}
-  m_CullTransparentMesh: 0
 --- !u!114 &956900802109000962
 MonoBehaviour:
   m_ObjectHideFlags: 0

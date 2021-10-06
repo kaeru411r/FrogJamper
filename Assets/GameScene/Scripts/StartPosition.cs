@@ -17,6 +17,9 @@ public class StartPosition : MonoBehaviour
     [Tooltip("FieldManagerコンポーネント")]
     [SerializeField] FieldManager m_fieldManager = default;
 
+    [Tooltip("点滅している時間")]
+    [SerializeField] float m_blinkTime;
+
     private void Start()
     {
         transform.position = new Vector3(m_fieldManager.Position.x, m_fieldManager.FieldEreaUY + 1);
@@ -40,7 +43,11 @@ public class StartPosition : MonoBehaviour
     }
     IEnumerator Break() //時限による葉っぱの破壊及びsinkを呼び出し
     {
-        yield return new WaitForSeconds(m_time);    //m_time経過後次の行へ
+        yield return new WaitForSeconds(m_time - m_blinkTime);    //m_time経過後次の行へ
+
+        GetComponent<Animator>().enabled = true;
+
+        yield return new WaitForSeconds(m_blinkTime);
 
 
         Debug.Log(" ");

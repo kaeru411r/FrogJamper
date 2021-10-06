@@ -187,7 +187,7 @@ public class FrogController : MonoBehaviour
         power = 0;
 
         //  着地か着水か
-        if (m_contact) // 着地できる範囲に着地可能なオブジェクトがあったら接地判定をtrueにし、向きを正す
+        if (m_contact && m_state == FrogState.MidAir) // 着地できる範囲に着地可能なオブジェクトがあったら接地判定をtrueにし、向きを正す
         {
             Debug.Log("着地着水");
             m_sr.sprite = m_sprite[0];
@@ -413,8 +413,8 @@ public class FrogController : MonoBehaviour
         if (tf)
         {
             circleButton.text = "Circle Off";
-            m_lineRen.startWidth = 0.1f;
-            m_lineRen.endWidth = 0.1f;
+            m_lineRen.startWidth = m_cirWid;
+            m_lineRen.endWidth = m_cirWid;
             PlayerPrefs.SetInt("Circle", 1);
             m_circle = true;
         }
@@ -443,8 +443,8 @@ public class FrogController : MonoBehaviour
         else
         {
             circleButton.text = "Circle Off";
-            m_lineRen.startWidth = 0.1f;
-            m_lineRen.endWidth = 0.1f;
+            m_lineRen.startWidth = m_cirWid;
+            m_lineRen.endWidth = m_cirWid;
             PlayerPrefs.SetInt("Circle", 1);
             m_circle = true;
         }

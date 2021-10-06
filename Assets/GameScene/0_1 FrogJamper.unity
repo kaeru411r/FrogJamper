@@ -572,7 +572,7 @@ RectTransform:
   - {fileID: 1206031802}
   - {fileID: 1179137826}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -835,7 +835,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &424978157
 GameObject:
@@ -1555,7 +1555,7 @@ RectTransform:
   - {fileID: 2137249415}
   - {fileID: 547308895}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2020,8 +2020,9 @@ Transform:
   - {fileID: 1303205586}
   - {fileID: 1976223217}
   - {fileID: 1228708334}
+  - {fileID: 1754858926}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1116232548
 GameObject:
@@ -2879,12 +2880,12 @@ GameObject:
   - component: {fileID: 1754858926}
   - component: {fileID: 1754858925}
   m_Layer: 0
-  m_Name: WhiteBuck
+  m_Name: BuckGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1754858925
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2925,7 +2926,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1cd9748c8da4be7478d15e9d90fdeda9, type: 3}
-  m_Color: {r: 0, g: 0.63333344, b: 1, a: 1}
+  m_Color: {r: 0.43230188, g: 0.71599996, b: 0.17562263, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2942,11 +2943,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1754858924}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -50}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -970.9145, y: -430.1412, z: 500}
   m_LocalScale: {x: 79.47, y: 50, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1096065453}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1809575969
@@ -3561,7 +3562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2065208452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3641,7 +3642,7 @@ RectTransform:
   - {fileID: 980747161}
   - {fileID: 880359564}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

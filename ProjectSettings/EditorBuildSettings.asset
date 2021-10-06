@@ -9,6 +9,15 @@ EditorBuildSettings:
     path: Assets/TitleScene/Title.unity
     guid: b2deb51f522c42e488876040e3a5aa0a
   - enabled: 1
-    path: Assets/GameScene/0_1 FrogJamper.unity
+    path: Assets/TitleScene/StageSelect.unity
+    guid: 4d7b27b73fc27094a9f57ccdfad69f8e
+  - enabled: 1
+    path: Assets/GameScene/Stage1.unity
     guid: 7d5ff265e6918454f8d2ecc294473b49
+  - enabled: 1
+    path: Assets/GameScene/Stage2.unity
+    guid: 9c65efc6ad547984b8888d5ec2988c4c
+  - enabled: 1
+    path: Assets/GameScene/ExtraStage.unity
+    guid: eae38390e46bf4a42a5d79650c317f17
   m_configObjects: {}

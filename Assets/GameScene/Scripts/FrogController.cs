@@ -101,8 +101,15 @@ public class FrogController : MonoBehaviour
         m_sr = GetComponent<SpriteRenderer>();    //  外見変更用
 
 
-        //
-        Circle(m_circle);
+        if (!PlayerPrefs.HasKey("Circle") || PlayerPrefs.GetInt("Circle") == 1)
+        {
+            Circle(true);
+        }
+        else
+        {
+            Circle(false);
+        }
+
 
         //  円の設定
         m_lineRen.startWidth = m_cirWid;
@@ -180,14 +187,14 @@ public class FrogController : MonoBehaviour
         power = 0;
 
         //  着地か着水か
-        if (m_contact) // 着地できる範囲に着地可能なオブジェクトがあったら接地判定をtrueにし、向きを正す
+        if (m_contact && m_state == FrogState.MidAir) // 着地できる範囲に着地可能なオブジェクトがあったら接地判定をtrueにし、向きを正す
         {
             Debug.Log("着地着水");
             m_sr.sprite = m_sprite[0];
             m_state = FrogState.Grounded;
             transform.up = new Vector2(0, 0);
         }
-        if(m_state == FrogState.InWater) { }    //  すでに沈んでいたら何もしない
+        else if(m_state == FrogState.InWater) { }    //  すでに沈んでいたら何もしない
         else  //そうでなければ水没する
         {
             StartCoroutine(Sink());
@@ -406,14 +413,18 @@ public class FrogController : MonoBehaviour
         if (tf)
         {
             circleButton.text = "Circle Off";
-            m_lineRen.startWidth = 0.1f;
-            m_lineRen.endWidth = 0.1f;
+            m_lineRen.startWidth = m_cirWid;
+            m_lineRen.endWidth = m_cirWid;
+            PlayerPrefs.SetInt("Circle", 1);
+            m_circle = true;
         }
         else
         {
             circleButton.text = "Circle On";
             m_lineRen.startWidth = 0;
             m_lineRen.endWidth = 0;
+            PlayerPrefs.SetInt("Circle", 0);
+            m_circle = false;
         }
         m_circle = tf;
     }
@@ -426,12 +437,16 @@ public class FrogController : MonoBehaviour
             circleButton.text = "Circle On";
             m_lineRen.startWidth = 0;
             m_lineRen.endWidth = 0;
+            PlayerPrefs.SetInt("Circle", 0);
+            m_circle = false;
         }
         else
         {
             circleButton.text = "Circle Off";
-            m_lineRen.startWidth = 0.1f;
-            m_lineRen.endWidth = 0.1f;
+            m_lineRen.startWidth = m_cirWid;
+            m_lineRen.endWidth = m_cirWid;
+            PlayerPrefs.SetInt("Circle", 1);
+            m_circle = true;
         }
         m_circle = !m_circle;
     }

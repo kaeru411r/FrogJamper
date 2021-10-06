@@ -9,6 +9,8 @@ public class SceanManager : MonoBehaviour
 
     [SerializeField] Score m_score = default;
 
+    [SerializeField] Scene m_titleScene;
+
     string m_thisSceanName;
 
     [Tooltip("タイトルシーン")]
@@ -18,10 +20,12 @@ public class SceanManager : MonoBehaviour
     {
         //DontDestroyOnLoad(this);
 
+        PlayerPrefs.Save();
         m_thisSceanName = SceneManager.GetActiveScene().name;
     }
     public void ReStart(string nowScean)
     {
+        PlayerPrefs.Save();
         SceneManager.LoadScene(nowScean);
     }
     /// <summary>
@@ -31,6 +35,7 @@ public class SceanManager : MonoBehaviour
     /// </summary>
     public void GameReplay()
     {
+        PlayerPrefs.Save();
         SceneManager.LoadScene(m_thisSceanName);
     }
 
@@ -39,13 +44,19 @@ public class SceanManager : MonoBehaviour
     /// </summary>
     public void Exit()
     {
-        SceneManager.LoadScene(m_titleSceanName);
-        Destroy(gameObject, 0);
+        PlayerPrefs.Save();
+        SceneManager.LoadScene(m_titleScene.handle);
     }
 
     public void ReStart()
     {
+        PlayerPrefs.Save();
         SceneManager.LoadScene(m_thisSceanName);
-        m_gameManager.SetUp();
+    }
+
+    public void SceneChange(int value)
+    {
+        PlayerPrefs.Save();
+        SceneManager.LoadScene(value);
     }
 }

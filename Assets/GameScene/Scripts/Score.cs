@@ -26,7 +26,7 @@ public class Score : MonoBehaviour
     float m_fractionTime = 0;
 
     /// <summary>現在ゲームが止まっているか</summary>
-    bool m_stop = false;
+    bool m_stop = true;
 
     [Tooltip("BonusScoreで足されるスコア")]
     [SerializeField] int m_bonusScore = default;
@@ -44,8 +44,16 @@ public class Score : MonoBehaviour
     [Tooltip("クリアに必要なスコア")]
     [SerializeField] int m_goal;
 
+    public int Goal { get { return m_goal; } }
+
     [Tooltip("ゲームマネージャー")]
     [SerializeField] GameManager3 m_gameManager;
+
+    [Tooltip("スコアの獲得量の係数")]
+    [SerializeField] float m_coefficient;
+
+    /// <summary>実際に使用するスコアの獲得量の係数</summary>
+    static float m_staticCoefficient;
 
 
 
@@ -65,10 +73,10 @@ public class Score : MonoBehaviour
             }
 
             //  スコア計算部分
-            int iTime = (int)(Time.deltaTime * 100);                    //  Time.deltaTimeを100倍した数の整数部分でiTimeを初期化
-            m_fractionTime += Time.deltaTime - iTime / 100f;            //  iTimeに代入した分を除いたTime.deltaTimeをm_fractionTimeに足す
-            iTime += (int)(m_fractionTime * 100);                       //  m_fractionTimeを100倍した数の整数部分をiTimeに足す
-            m_fractionTime -= ((int)(m_fractionTime * 100)) / 100f;     //  m_fractionTimeからiTimeに足した分を引く
+            int iTime = (int)(Time.deltaTime * 100 * m_staticCoefficient);                    //  Time.deltaTimeを100倍した数の整数部分でiTimeを初期化
+            m_fractionTime += Time.deltaTime - iTime / 100f / m_staticCoefficient;            //  iTimeに代入した分を除いたTime.deltaTimeをm_fractionTimeに足す
+            iTime += (int)(m_fractionTime * 100 * m_staticCoefficient);                       //  m_fractionTimeを100倍した数の整数部分をiTimeに足す
+            m_fractionTime -= ((int)(m_fractionTime * 100)) / 100f / m_staticCoefficient;     //  m_fractionTimeからiTimeに足した分を引く
             m_score += iTime;                                           //  m_socreにiTimeを足す
             //
 
@@ -104,6 +112,7 @@ public class Score : MonoBehaviour
     {
         m_score = 0;
         m_scores.Clear();
+        m_staticCoefficient = m_coefficient;
     }
 
     /// <summary>
@@ -134,13 +143,27 @@ public class Score : MonoBehaviour
         StartCoroutine(BonusDisplay());
     }
 
+    /// <summary>係数を設定する</summary>
+    /// <param name="value"></param>
+    public void SetCoefficient(float value)
+    {
+        m_staticCoefficient = value;
+    }
+
+    /// <summary>係数を現在のvalue倍にする</summary>
+    /// <param name="value"></param>
+    public void MultiplyCoefficient(float value)
+    {
+        m_staticCoefficient *= value;
+    }
+
     /// <summary>
     /// スコアボーナスを獲得する
     /// </summary>
     public void AddScore(int value)
     {
         m_score += value;
-        StartCoroutine(BonusDisplay());
+        StartCoroutine(BonusDisplay(value));
     }
 
     /// <summary>
@@ -157,6 +180,38 @@ public class Score : MonoBehaviour
         else
         {
             m_bonusTextValue += m_bonusScore;
+            yield return null;                  //  1回目のみ次のフレームに処理を持ち越す
+        }
+        //  ここまで1フレーム目
+
+        m_bonusText = "  +" + m_bonusTextValue;
+        m_bonusTextValue = 0;
+        m_bonusDisplayNumber++;
+        //  ここまで2フレーム目
+
+        yield return new WaitForSeconds(m_bonusDisplayTime);
+
+        //  ここから指定秒数経過後
+        m_bonusDisplayNumber--;
+        if (m_bonusDisplayNumber <= 0)          //  もしこのインスタンス以降にインスタンス化されたこの関数が無ければ表示を消す
+        {
+            m_bonusText = "";
+        }
+    }
+    /// <summary>
+    /// スコアボーナスを表示
+    /// 一フレームに呼ばれた回数分だけボーナスの表示数値が倍増していく
+    /// </summary>
+    IEnumerator BonusDisplay(int value)
+    {
+        if (m_bonusTextValue != 0)
+        {
+            m_bonusTextValue += value;
+            yield break;                        //  2回目以降は処理をここで終了する
+        }
+        else
+        {
+            m_bonusTextValue += value;
             yield return null;                  //  1回目のみ次のフレームに処理を持ち越す
         }
         //  ここまで1フレーム目

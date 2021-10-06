@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// タイトル画面の全体管理
 /// </summary>
-public class GameStart : MonoBehaviour
+public class GameStartMenu : MonoBehaviour
 {
 
 
@@ -17,20 +17,28 @@ public class GameStart : MonoBehaviour
     bool m_openMenu = false;
     //
 
-    [Tooltip("ステージ１のインデックス")]
-    [SerializeField] string m_stage1Name = default;
 
     /// <summary>カエルの円の表示の有無</summary>
     bool m_circle = true;
     [Tooltip("円切り替えボタンのテキスト")]
     [SerializeField] Text m_circleButton = default;
 
+    [Tooltip("操作説明")]
+    [SerializeField] GameObject m_manual;
 
-    /// <summary>ゲームを開始する</summary>
+
     private void Start()
     {
-        DontDestroyOnLoad(this);
+        if (!PlayerPrefs.HasKey("Circle") || PlayerPrefs.GetInt("Circle") == 1)
+        {
+            Circle(true);
+        }
+        else
+        {
+            Circle(false);
+        }
     }
+
 
     private void Update()
     {
@@ -38,6 +46,7 @@ public class GameStart : MonoBehaviour
         {
             m_menu.SetActive(false);
             m_openMenu = false;
+            m_manual.SetActive(false);
         }
         else if (Input.GetButtonDown("Cancel") && !m_openMenu) //  メニュー開く
         {
@@ -46,24 +55,7 @@ public class GameStart : MonoBehaviour
         }
     }
 
-    /// <summary>シーンをゲームシーンに移行する</summary>
-    public void NextScene()
-    {
-        SceneManager.LoadScene(m_stage1Name);
-        StartCoroutine(SetUp());
-    }
 
-    /// <summary>
-    /// ゲームシーンが読み込まれた後、セットアップを行う
-    /// </summary>
-    IEnumerator SetUp()
-    {
-        yield return null;
-
-        GameObject.Find("Frog").GetComponent<FrogController>().Circle(m_circle);
-        GameObject.Find("GameManager").GetComponent<GameManager3>().SetUp();
-        Destroy(gameObject, 0);
-    }
 
     /// <summary>ゲームを終了</summary>
     public void Quit()
@@ -78,6 +70,7 @@ public class GameStart : MonoBehaviour
         {
             m_menu.SetActive(false);
             m_openMenu = false;
+            m_manual.SetActive(false);
         }
         else
         {
@@ -93,6 +86,7 @@ public class GameStart : MonoBehaviour
         {
             m_menu.SetActive(false);
             m_openMenu = false;
+            m_manual.SetActive(false);
         }
         else
         {
@@ -107,12 +101,30 @@ public class GameStart : MonoBehaviour
         if (m_circle)
         {
             m_circle = false;
-            m_circleButton.text = "Circle Off";
+            PlayerPrefs.SetInt("Circle", 0);
+            m_circleButton.text = "Circle On";
         }
         else
         {
             m_circle = true;
+            PlayerPrefs.SetInt("Circle", 1);
+            m_circleButton.text = "Circle Off";
+        }
+    }
+    /// <summary>円の表示切替</summary>
+    public void Circle(bool value)
+    {
+        if (!value)
+        {
+            m_circle = false;
+            PlayerPrefs.SetInt("Circle", 0);
             m_circleButton.text = "Circle On";
+        }
+        else
+        {
+            m_circle = true;
+            PlayerPrefs.SetInt("Circle", 1);
+            m_circleButton.text = "Circle Off";
         }
     }
 }

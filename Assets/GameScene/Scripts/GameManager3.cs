@@ -237,11 +237,13 @@ public class GameManager3 : MonoBehaviour
     /// </summary>
     public void Exit()
     {
+        m_state = State.Start;
         m_sceanManager.Exit();
     }
 
     public void ReStart()
     {
+        m_state = State.Start;
         m_sceanManager.ReStart();
     }
 

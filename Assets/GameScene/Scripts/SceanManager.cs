@@ -9,6 +9,8 @@ public class SceanManager : MonoBehaviour
 
     [SerializeField] Score m_score = default;
 
+    [SerializeField] Scene m_titleScene;
+
     string m_thisSceanName;
 
     [Tooltip("タイトルシーン")]
@@ -39,13 +41,13 @@ public class SceanManager : MonoBehaviour
     /// </summary>
     public void Exit()
     {
-        SceneManager.LoadScene(m_titleSceanName);
+        SceneManager.LoadScene(m_titleScene.name);
         Destroy(gameObject, 0);
     }
 
     public void ReStart()
     {
         SceneManager.LoadScene(m_thisSceanName);
-        m_gameManager.SetUp();
+        //m_gameManager.SetUp();
     }
 }

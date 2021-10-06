@@ -822,6 +822,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_gameManager: {fileID: 236525344}
   m_score: {fileID: 1206031803}
+  m_titleScene:
+    m_Handle: 0
   m_titleSceanName: Title
 --- !u!4 &289180975
 Transform:
@@ -1533,7 +1535,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!224 &812290529
 RectTransform:
@@ -1555,7 +1557,7 @@ RectTransform:
   - {fileID: 2137249415}
   - {fileID: 547308895}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2022,7 +2024,7 @@ Transform:
   - {fileID: 1228708334}
   - {fileID: 1754858926}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1116232548
 GameObject:
@@ -2926,7 +2928,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1cd9748c8da4be7478d15e9d90fdeda9, type: 3}
-  m_Color: {r: 0.43230188, g: 0.71599996, b: 0.17562263, a: 1}
+  m_Color: {r: 0.29264587, g: 0.574, b: 0.14114754, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3621,7 +3623,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_TargetDisplay: 0
 --- !u!224 &2065208455
 RectTransform:
@@ -3642,7 +3644,7 @@ RectTransform:
   - {fileID: 980747161}
   - {fileID: 880359564}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

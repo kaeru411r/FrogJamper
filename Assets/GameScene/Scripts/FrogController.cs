@@ -101,8 +101,16 @@ public class FrogController : MonoBehaviour
         m_sr = GetComponent<SpriteRenderer>();    //  外見変更用
 
 
-        //
-        Circle(m_circle);
+
+        if (PlayerPrefs.HasKey("Circle") || PlayerPrefs.GetInt("Circle") == 0)
+        {
+            Circle(true);
+        }
+        else
+        {
+            Circle(false);
+        }
+
 
         //  円の設定
         m_lineRen.startWidth = m_cirWid;
@@ -408,12 +416,14 @@ public class FrogController : MonoBehaviour
             circleButton.text = "Circle Off";
             m_lineRen.startWidth = 0.1f;
             m_lineRen.endWidth = 0.1f;
+            PlayerPrefs.SetInt("Circle", 1);
         }
         else
         {
             circleButton.text = "Circle On";
             m_lineRen.startWidth = 0;
             m_lineRen.endWidth = 0;
+            PlayerPrefs.SetInt("Circle", 0);
         }
         m_circle = tf;
     }
@@ -426,12 +436,14 @@ public class FrogController : MonoBehaviour
             circleButton.text = "Circle On";
             m_lineRen.startWidth = 0;
             m_lineRen.endWidth = 0;
+            PlayerPrefs.SetInt("Circle", 0);
         }
         else
         {
             circleButton.text = "Circle Off";
             m_lineRen.startWidth = 0.1f;
             m_lineRen.endWidth = 0.1f;
+            PlayerPrefs.SetInt("Circle", 1);
         }
         m_circle = !m_circle;
     }

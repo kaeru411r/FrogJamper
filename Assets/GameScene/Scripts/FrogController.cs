@@ -187,7 +187,7 @@ public class FrogController : MonoBehaviour
             m_state = FrogState.Grounded;
             transform.up = new Vector2(0, 0);
         }
-        if(m_state == FrogState.InWater) { }    //  すでに沈んでいたら何もしない
+        else if(m_state == FrogState.InWater) { }    //  すでに沈んでいたら何もしない
         else  //そうでなければ水没する
         {
             StartCoroutine(Sink());

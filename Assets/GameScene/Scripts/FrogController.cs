@@ -438,7 +438,7 @@ public class FrogController : MonoBehaviour
             m_lineRen.startWidth = 0;
             m_lineRen.endWidth = 0;
             PlayerPrefs.SetInt("Circle", 0);
-            m_circle = false;
+            m_circle = true;
         }
         else
         {
@@ -446,7 +446,7 @@ public class FrogController : MonoBehaviour
             m_lineRen.startWidth = m_cirWid;
             m_lineRen.endWidth = m_cirWid;
             PlayerPrefs.SetInt("Circle", 1);
-            m_circle = true;
+            m_circle = false;
         }
         m_circle = !m_circle;
     }

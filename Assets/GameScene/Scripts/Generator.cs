@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 
 /// <summary>
@@ -82,11 +83,26 @@ public class Generator : MonoBehaviour
                         break;
                     }
                 }
+
+                var goArray = m_instanceObjects.Where(go => go.transform.position.y > m_fieldManager.transform.position.y - m_passportErea).ToList();
+                goArray.ForEach((_) => beingness = true);
+
+                var maxY = m_instanceObjects.Max(go => go.transform.position.y);
+                if (maxY > m_fieldManager.transform.position.y - m_passportErea)
+                {
+                    beingness = true; 
+                }
+
+
                 if (!beingness)
                 {
                     TopGenerate();
                 }
+
+
             }
+
+
 
             if (lastLottery > m_lotteryInterval && m_instanceObjects.Count < m_upperLimit)    //  一定間隔おきで一定個数以下の時抽選
             {
@@ -156,6 +172,8 @@ public class Generator : MonoBehaviour
                 i--;
             }
         }
+
+        //m_instanceObjects.W
     }
 
     /// <summary>生成機能のオンオフ切り替え</summary>

@@ -116,8 +116,7 @@ public class Generator : MonoBehaviour
     /// <summary>蓮の葉を全消去</summary>
     public void Destroy()
     {
-        foreach (var go in m_instanceObjects)
-            Destroy(go, 0);
+        m_instanceObjects.ForEach(go => Destroy(go));
     }
 
     /// <summary>
@@ -172,8 +171,6 @@ public class Generator : MonoBehaviour
                 i--;
             }
         }
-
-        //m_instanceObjects.W
     }
 
     /// <summary>生成機能のオンオフ切り替え</summary>

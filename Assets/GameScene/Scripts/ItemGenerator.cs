@@ -225,13 +225,15 @@ public class ItemGenerator : MonoBehaviour
     /// <summary>アイテムを全て消す</summary>
     public void Destroy()
     {
-        foreach (var list in m_instanceObjects)
-        {
-            foreach (var go in list)
-            {
-                Destroy(go, 0);
-            }
-        }
+        //foreach (var list in m_instanceObjects)
+        //{
+        //    foreach (var go in list)
+        //    {
+        //        Destroy(go, 0);
+        //    }
+        //}
+
+        m_instanceObjects.ForEach(l => l.ForEach(go => Destroy(go)));
     }
 
     /// <summary>生成機能のオンオフ切り替え</summary>

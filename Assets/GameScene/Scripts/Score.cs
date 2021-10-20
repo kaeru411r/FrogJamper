@@ -121,18 +121,10 @@ public class Score : MonoBehaviour
     public void ScoreRecode()
     {
         int lastScore = 0;
-        //foreach (var buf in m_scores)
-        //{
-        //    lastScore += buf;
-        //}
         m_scores.ForEach(i => lastScore += i);
         m_scoreText = "This turn score" + (m_score - lastScore);    //  死亡時テキスト設定
         m_scores.Add(m_score - lastScore);                          //  今世のスコアを記録
         Debug.Log(m_score);
-        //foreach (var buf in m_scores)
-        //{
-        //    Debug.Log(buf);
-        //}
         m_scores.ForEach(i => Debug.Log(i));
     }
 

@@ -59,10 +59,6 @@ public class Generator : MonoBehaviour
 
 
 
-    //private void Start()
-    //{
-    //    SetUp();
-    //}
     // Update is called once per frame
     void Update()
     {
@@ -75,17 +71,6 @@ public class Generator : MonoBehaviour
             if (m_instanceObjects.Count > 0)
             {
                 bool beingness = false;
-                //foreach (var ob in m_instanceObjects)   //  一定エリアより上に蓮が無くなったら湧かす
-                //{
-                //    if (ob.transform.position.y > m_fieldManager.transform.position.y - m_passportErea)
-                //    {
-                //        beingness = true;
-                //        break;
-                //    }
-                //}
-
-                //var goArray = m_instanceObjects.Where(go => go.transform.position.y > m_fieldManager.transform.position.y - m_passportErea).ToList();
-                //goArray.ForEach((_) => beingness = true);
 
                 var maxY = m_instanceObjects.Max(go => go.transform.position.y);
                 if (maxY > m_fieldManager.transform.position.y - m_passportErea)
@@ -129,15 +114,6 @@ public class Generator : MonoBehaviour
             TopGenerate();
             m_notGenerated = 0; //生成したらrelifをリセット
         }
-        //else
-        //{
-        //    m_notGenerated += lastLottery;   //生成しなかったフレームはrelifを＋１
-        //}
-        //if (m_notGenerated >= m_minimumTime)    //relifがm_timeを超えたらm_genObを生成し、relifをリセット
-        //{
-        //    TopGenerate();
-        //    m_notGenerated = 0;
-        //}
     }
 
 

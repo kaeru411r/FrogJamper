@@ -88,7 +88,6 @@ public class Generator : MonoBehaviour
             }
 
 
-
             if (lastLottery > m_lotteryInterval && m_instanceObjects.Count < m_upperLimit)    //  一定間隔おきで一定個数以下の時抽選
             {
                 Lottery();

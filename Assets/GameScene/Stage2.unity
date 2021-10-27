@@ -1934,10 +1934,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_frog: {fileID: 1644323145}
-  m_score: {fileID: 263068409}
+  m_scoreMaanger: {fileID: 263068409}
   m_gameManager3: {fileID: 1733021442}
   m_posY: 240
   m_size: 70
+  m_changeInterval: 1
 --- !u!114 &1010878667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5185,10 +5186,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_frog: {fileID: 0}
-  m_score: {fileID: 0}
+  m_scoreMaanger: {fileID: 0}
   m_gameManager3: {fileID: 0}
   m_posY: 0
   m_size: 0
+  m_changeInterval: 0
 --- !u!114 &2142654029
 MonoBehaviour:
   m_ObjectHideFlags: 0
